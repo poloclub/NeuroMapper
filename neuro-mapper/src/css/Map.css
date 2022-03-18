@@ -1,0 +1,7 @@
+#map-wrap {
+  display: flex;
+  /* justify-content: space-evenly; */
+}
+.map {
+  padding: 10px;
+}
