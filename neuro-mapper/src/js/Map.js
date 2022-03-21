@@ -15,7 +15,7 @@ export const Map = observer(
 
     useEffect(() => {
 
-      if (!store.isEmbDataAvailable()) {
+      if (!store.loadingEmbDone) {
         return;
       }
 
@@ -32,7 +32,7 @@ export const Map = observer(
         drawMap(g, layer, data)
       }
       
-    }, [store.embData, store.loadingEmbDone])
+    }, [store.loadingEmbDone])
 
     const makeMapZoomable = (svgs, gs) => {
       let numLayers = constant.layers.length

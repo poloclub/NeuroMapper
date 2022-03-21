@@ -82,18 +82,7 @@ export class Store {
         let embFileName = `${dirPath}/${epoch}_embedding.csv`
         let labelFileName = `${dirPath}/${epoch}_labels.csv`
 
-        // Load label data
-        fetch(labelFileName)
-          .then(res => res.text())
-          .then(data => {
-            data = data
-              .split('\n')
-              .map(label => parseFloat(label))
-              .slice(0, -1)
-            embData[layer][epoch]['label'] = data
-          })
-
-        // Load embedding data
+        // Load embedding and label data
         fetch(embFileName)
           .then(res => res.text())
           .then(data => {
@@ -102,10 +91,22 @@ export class Store {
               .map(coord => coord.split(',').map(v => parseFloat(v)))
               .slice(0, -1)
             embData[layer][epoch]['emb'] = data
-            if (this.isLast(layer, constant.layers) && this.isLast(epoch, constant.epochs)) {
-              this.parseEmbData(embData)
-              this.setLoadingEmbDone(true)
-            }
+
+            // Load label data
+            fetch(labelFileName)
+              .then(res => res.text())
+              .then(labelData => {
+                labelData = labelData
+                  .split('\n')
+                  .map(label => parseFloat(label))
+                  .slice(0, -1)
+                embData[layer][epoch]['label'] = labelData
+
+                if (this.isLast(layer, constant.layers) && this.isLast(epoch, constant.epochs)) {
+                  this.parseEmbData(embData)
+                  this.setLoadingEmbDone(true)
+                }
+              })
           })
       }
     }
@@ -116,20 +117,7 @@ export class Store {
   }
 
   isLast(e, arr) {
-    return e == this.getLast(arr)
-  }
-
-  isEmbDataAvailable = () => {
-    let fstLayer = constant.layers[0]
-    let fstEpoch = constant.epochs[0]
-    let fstKey = 'emb'
-    if (Object.keys(this.embData).length === 0) {
-      return false
-    } else if (this.embData[fstLayer].length === 0) {
-      return false
-    } else {
-      return true
-    }
+    return e === this.getLast(arr)
   }
 
   parseEmbData(embData) {
