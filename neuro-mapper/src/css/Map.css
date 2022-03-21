@@ -1,7 +1,12 @@
-#map-wrap {
+#map-contents {
   display: flex;
-  /* justify-content: space-evenly; */
+  justify-content: space-evenly;
 }
+
 .map {
   padding: 10px;
+}
+
+#map-wrap {
+  padding: 20px;
 }

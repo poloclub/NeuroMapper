@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { observer } from "mobx-react";
 import { useEffect, useRef } from "react";
-// import { Slider } from "@mui/material";
+import { Slider } from "@mui/material";
 import * as constant from "./constant.js";
 
 export const Map = observer(
@@ -19,10 +19,7 @@ export const Map = observer(
         return;
       }
 
-      console.log(store.embData)
-
-      let embRange = getMinMaxCoord()
-      let [xScale, yScale] = getScale(embRange)
+      store.setXYScale()
 
       const svgs = svgRefs.map(svgRef => d3.select(svgRef.current))
       const gs = gRefs.map(gRef => d3.select(gRef.current))
@@ -30,8 +27,9 @@ export const Map = observer(
       makeMapZoomable(svgs, gs)
       for (let i = 0; i < numLayers; i++) {
         let g = gs[i]
-        let data = store.embData[constant.layers[i]]
-        drawMap(g, data, xScale, yScale)
+        let layer = constant.layers[i]
+        let data = store.embData[layer]
+        drawMap(g, layer, data)
       }
       
     }, [store.embData, store.loadingEmbDone])
@@ -53,97 +51,83 @@ export const Map = observer(
       }
     }
 
-    const getMinMaxCoord = () => {
-      let [minX, maxX, minY, maxY] = [0, 0, 0, 0]
-      for (let layer of constant.layers) {
-        for (let epoch of constant.epochs) {
-          let embs = store.embData[layer][epoch]['emb']
-          for (let emb of embs) {
-            let [x, y] = [emb[0], emb[1]]
-            minX = getMin(x, minX)
-            maxX = getMax(x, maxX)
-            minY = getMin(y, minY)
-            maxY = getMax(y, maxY)
-          }
-        }
-      }
-      let embRange = {
-        'x': {'min': minX, 'max': maxX},
-        'y': {'min': minY, 'max': maxY}
-      }
-      return embRange
-    }
-
-    const getMin = (a, b) => {
-      if (a < b) {
-        return a
-      } else {
-        return b
-      }
-    }
-
-    const getMax = (a, b) => {
-      if (a > b) {
-        return a
-      } else {
-        return b
-      }
-    }
-
-    const getScale = (embRange) => {
-      let xScale = d3.scaleLinear()
-        .domain([embRange.x.min, embRange.x.max])
-        .range([0, constant.mapWidth])
-
-      let yScale = d3.scaleLinear()
-        .domain([embRange.y.min, embRange.y.max])
-        .range([0, constant.mapHeight])
-
-      return [xScale, yScale]
-    }
-
-    const drawMap = (g, data, xScale, yScale) => {
+    const drawMap = (g, layer, data) => {
       g.selectAll("rect")
-        .data(data[store.epoch]['emb'])
+        .data(data)
         .join("rect")
-          .attr("id", (d, i) => `emb-${i}`)
-          .attr("class", "emb")
-          .attr("x", (d) => xScale(d[0]))
-          .attr("y", (d) => yScale(d[1]))
+          .attr("id", (d, i) => `emb-${layer}-${i}`)
+          .attr("class", (d, i) => {
+            let c1 = "emb"
+            let c2 = `emb-${i}`
+            let c3 = `emb-${layer}`
+            let c4 = `emb-label-${d['label']}`
+            return [c1, c2, c3, c4].join(' ')
+          })
+          .attr("x", (d) => store.xScale(d['emb'][store.epoch][0]))
+          .attr("y", (d) => store.yScale(d['emb'][store.epoch][1]))
           .attr("width", constant.embSize)
           .attr("height", constant.embSize)
-          .attr("fill", constant.embColor)
+          .attr("fill", d => constant.embColors[d['label']])
+    }
+
+    const handleSliderChange = (e, val) => {
+      let epoch = val
+      store.setEpoch(epoch)
+
+      for (let layer of constant.layers) {
+        d3.select(`#map-g-${layer}`)
+          .selectAll(`.emb-${layer}`)
+          .transition()
+            .attr("x", (d) => store.xScale(d['emb'][epoch][0]))
+            .attr("y", (d) => store.yScale(d['emb'][epoch][1]))
+      }
+
+      document.getElementById("epoch-val").innerText = `epoch = ${epoch}`
     }
 
     return (
       <div id="map-wrap">
-        {constant.layers.map((layer, i) => (
-          <div id={`map-${layer}`} className="map" key={layer}>
-            <div className="map-title">{layer}</div>
-            <div className="map-canvas">
-              <svg 
-                ref={svgRefs[i]} 
-                id={`map-svg-${layer}`}
-                className="map-svg"
-                width={constant.mapWidth}
-                height={constant.mapHeight}
-              >
-                <rect 
-                  id={`map-bg-${layer}`} 
-                  className="map-bg"
+        <div id="epoch-val">
+          epoch = {constant.epochs[0]}
+        </div>
+        <Slider
+          defaultValue={constant.epochs[0]}
+          valueLabelDisplay="auto"
+          step={10}
+          min={constant.epochs[0]}
+          max={constant.epochs.slice(-1)[0]}
+          color="secondary"
+          onChange={handleSliderChange}
+        />
+        <div id="map-contents">
+          {constant.layers.map((layer, i) => (
+            <div id={`map-${layer}`} className="map" key={layer}>
+              <div className="map-title">{layer}</div>
+              <div className="map-canvas">
+                <svg 
+                  ref={svgRefs[i]} 
+                  id={`map-svg-${layer}`}
+                  className="map-svg"
                   width={constant.mapWidth}
                   height={constant.mapHeight}
-                  fill={constant.mapBgColor}
-                />
-                <g 
-                  ref={gRefs[i]} 
-                  id={`map-g-${layer}`} 
-                  className="map-g"
-                />
-              </svg>
+                >
+                  <rect 
+                    id={`map-bg-${layer}`} 
+                    className="map-bg"
+                    width={constant.mapWidth}
+                    height={constant.mapHeight}
+                    fill={constant.mapBgColor}
+                  />
+                  <g 
+                    ref={gRefs[i]} 
+                    id={`map-g-${layer}`} 
+                    className="map-g"
+                  />
+                </svg>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     )
     
