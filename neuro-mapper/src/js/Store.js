@@ -6,7 +6,7 @@ export class Store {
    * Training status
    */
 
-  epoch = 0
+  epoch = constant.epochs[0]
   setEpoch(epoch) {
   this.epoch = epoch
   }
@@ -19,6 +19,11 @@ export class Store {
     this.embData = embData
   }
 
+  loadingEmbDone = false
+  setLoadingEmbDone(loadingEmbDone) {
+    this.loadingEmbDone = loadingEmbDone
+  }
+
   /**
    * Constructor of Store
    */
@@ -28,6 +33,8 @@ export class Store {
     makeObservable(this, {
       epoch: observable,
       setEpoch: action,
+      loadingEmbDone: observable,
+      setLoadingEmbDone: action,
       embData: observable,
       setEmbData: action
     })
@@ -68,6 +75,9 @@ export class Store {
             .map(coord => coord.split(',').map(v => parseFloat(v)))
             .slice(0, -1)
           this.embData[layer][epoch]['emb'] = data
+          if (this.isLast(layer, constant.layers) && this.isLast(epoch, constant.epochs)) {
+            this.setLoadingEmbDone(true)
+          }
         })
 
         // Load label data
@@ -81,6 +91,31 @@ export class Store {
           this.embData[layer][epoch]['label'] = data
         })
       }
+    }
+  }
+
+  getLast(arr) {
+    return arr.slice(-1)[0]
+  }
+
+  isLast(e, arr) {
+    return e == this.getLast(arr)
+  }
+
+  isEmbDataAvailable = () => {
+    let fstLayer = constant.layers[0]
+    let fstEpoch = constant.epochs[0]
+    let fstKey = 'emb'
+    if (Object.keys(this.embData).length === 0) {
+      return false
+    } else if (Object.keys(this.embData[fstLayer]).length === 0) {
+      return false
+    } else if (Object.keys(this.embData[fstLayer][fstEpoch]).length === 0) {
+      return false
+    } else if (Object.keys(this.embData[fstLayer][fstEpoch][fstKey]).length === 0) {
+      return false
+    } else {
+      return true
     }
   }
 
