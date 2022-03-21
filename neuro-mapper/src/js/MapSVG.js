@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { Slider } from "@mui/material";
 import * as constant from "./constant.js";
 
-export const Map = observer(
+export const MapSVG = observer(
   ({
     store
   }) => {
@@ -103,7 +103,7 @@ export const Map = observer(
           {constant.layers.map((layer, i) => (
             <div id={`map-${layer}`} className="map" key={layer}>
               <div className="map-title">{layer}</div>
-              <div className="map-canvas">
+              <div className="map-map">
                 <svg 
                   ref={svgRefs[i]} 
                   id={`map-svg-${layer}`}
