@@ -82,13 +82,12 @@ export const MapSVG = observer(
             .attr("y", (d) => store.yScale(d['emb'][epoch][1]))
       }
 
-      document.getElementById("epoch-val").innerText = `epoch = ${epoch}`
     }
 
     return (
       <div id="map-wrap">
         <div id="epoch-val">
-          epoch = {constant.epochs[0]}
+          epoch = {store.epoch}
         </div>
         <Slider
           defaultValue={constant.epochs[0]}
