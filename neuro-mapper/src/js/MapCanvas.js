@@ -55,6 +55,9 @@ export const MapCanvas = observer(
         .attr("x", (d) => store.xScale(d["emb"][store.epoch][0]))
         .attr("y", (d) => store.yScale(d["emb"][store.epoch][1]))
         .attr("fill", d => constant.embColors[d['label']])
+        .on("mouseover", d => {
+          console.log(d)
+        })
         
       custom.selectAll("rect").each(function() {
         let sel = d3.select(this)
@@ -101,6 +104,8 @@ export const MapCanvas = observer(
                   ref={canvasRefs[i]} 
                   id={`map-canvas-${layer}`} 
                   className="map-canvas"
+                  width={constant.mapWidth}
+                  height={constant.mapHeight}
                 />
               </div>
             </div>
