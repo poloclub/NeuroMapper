@@ -11,6 +11,9 @@ export const MapCanvas = observer(
 
     let numLayers = constant.layers.length
     const canvasRefs = [...Array(numLayers)].map(x => useRef(null))
+    const customs = [...Array(numLayers)].map(
+      x => d3.select(document.createElement("custom"))
+    )
 
     useEffect(() => {
 
@@ -24,19 +27,20 @@ export const MapCanvas = observer(
 
       for (let i = 0; i < numLayers; i++) {
         let canvas = canvases[i].node()
+        let custom = customs[i]
         let layer = constant.layers[i]
         let data = store.embData[layer]
-        drawMap(canvas, layer, data)
+        drawMap(canvas, custom, layer, data)
       }
       
     }, [store.loadingEmbDone])
 
-    const drawMap = (canvas, layer, data) => {
+    const drawMap = (canvas, custom, layer, data) => {
       let context = canvas.getContext("2d")
-      context.clearRect(0, 0, canvas.width, canvas.height)
+      // context.clearRect(0, 0, canvas.width, canvas.height)
 
-      let faux = d3.select(document.createElement("custom"))
-      faux.selectAll("rect")
+      // let faux = d3.select(document.createElement("custom"))
+      custom.selectAll("rect")
         .data(data)
         .enter()
         .append("rect")
@@ -55,54 +59,25 @@ export const MapCanvas = observer(
         .attr("fill", d => constant.embColors[d['label']])
         
       
-      faux.selectAll("rect").each(function() {
+      // faux.selectAll("rect").each(function() {
+      custom.selectAll("rect").each(function() {
         let sel = d3.select(this)
         context.beginPath()
         context.fillStyle = sel.attr("fill")
         context.fillRect(sel.attr("x"), sel.attr("y"), 4, 4)
       })
-
-      // for (let d of data) {
-        // context.beginPath()
-        // context.arc(
-        //   store.xScale(d["emb"][store.epoch][0]),
-        //   store.yScale(d["emb"][store.epoch][1]),
-        //   constant.embSize,
-        //   0,
-        //   2 * Math.PI
-        // )
-        // context.fill()
-      // }
-      
-      // g.selectAll("rect")
-      //   .data(data)
-      //   .join("rect")
-      //     .attr("id", (d, i) => `emb-${layer}-${i}`)
-      //     .attr("class", (d, i) => {
-      //       let c1 = "emb"
-      //       let c2 = `emb-${i}`
-      //       let c3 = `emb-${layer}`
-      //       let c4 = `emb-label-${d['label']}`
-      //       return [c1, c2, c3, c4].join(' ')
-      //     })
-      //     .attr("x", (d) => store.xScale(d['emb'][store.epoch][0]))
-      //     .attr("y", (d) => store.yScale(d['emb'][store.epoch][1]))
-      //     .attr("width", constant.embSize)
-      //     .attr("height", constant.embSize)
-      //     .attr("fill", d => constant.embColors[d['label']])
     }
 
     const handleSliderChange = (e, val) => {
       let epoch = val
       store.setEpoch(epoch)
 
-      for (let layer of constant.layers) {
-        console.log(d3.select(`#map-canvas-${layer}`).selectAll(`.emb-${layer}`))
-        d3.select(`#map-canvas-${layer}`)
-          .selectAll(`.emb-${layer}`)
+      for (let i = 0; i < numLayers; i++) {
+        let custom = customs[i]
+        custom.selectAll("rect")
           .transition()
-            .attr("x", (d) => store.xScale(d['emb'][epoch][0]))
-            .attr("y", (d) => store.yScale(d['emb'][epoch][1]))
+            .attr("x", d => store.xScale(d["emb"][epoch][0]))
+            .attr("y", d => store.yScale(d["emb"][epoch][1]))
       }
 
     }
