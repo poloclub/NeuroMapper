@@ -14,6 +14,7 @@ export const MapCanvas = observer(
     const customs = [...Array(numLayers)].map(
       x => d3.select(document.createElement("custom"))
     )
+    const canvases = canvasRefs.map(canvasRef => d3.select(canvasRef.current))
 
     useEffect(() => {
 
@@ -22,8 +23,6 @@ export const MapCanvas = observer(
       }
 
       store.setXYScale()
-
-      const canvases = canvasRefs.map(canvasRef => d3.select(canvasRef.current))
 
       for (let i = 0; i < numLayers; i++) {
         let canvas = canvases[i].node()
@@ -37,9 +36,8 @@ export const MapCanvas = observer(
 
     const drawMap = (canvas, custom, layer, data) => {
       let context = canvas.getContext("2d")
-      // context.clearRect(0, 0, canvas.width, canvas.height)
+      context.clearRect(0, 0, canvas.width, canvas.height)
 
-      // let faux = d3.select(document.createElement("custom"))
       custom.selectAll("rect")
         .data(data)
         .enter()
@@ -58,8 +56,6 @@ export const MapCanvas = observer(
         .attr("y", (d) => store.yScale(d["emb"][store.epoch][1]))
         .attr("fill", d => constant.embColors[d['label']])
         
-      
-      // faux.selectAll("rect").each(function() {
       custom.selectAll("rect").each(function() {
         let sel = d3.select(this)
         context.beginPath()
@@ -73,11 +69,11 @@ export const MapCanvas = observer(
       store.setEpoch(epoch)
 
       for (let i = 0; i < numLayers; i++) {
+        let canvas = canvases[i].node()
         let custom = customs[i]
-        custom.selectAll("rect")
-          .transition()
-            .attr("x", d => store.xScale(d["emb"][epoch][0]))
-            .attr("y", d => store.yScale(d["emb"][epoch][1]))
+        let layer = constant.layers[i]
+        let data = store.embData[layer]
+        drawMap(canvas, custom, layer, data)
       }
 
     }
