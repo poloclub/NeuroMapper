@@ -52,7 +52,7 @@ export class Store {
       yScale: observable,
       setYScale: action,
       embData: observable,
-      setEmbData: action
+      setEmbData: action,
     })
 
     // Load data
