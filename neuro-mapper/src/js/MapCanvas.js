@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { observer } from "mobx-react";
+import { Slider } from "@mui/material";
 import { useEffect, useRef } from "react";
-import { DialogContentText, Slider } from "@mui/material";
 import * as constant from "./constant.js";
 
 export const MapCanvas = observer(
@@ -11,10 +11,13 @@ export const MapCanvas = observer(
 
     let numLayers = constant.layers.length
     const canvasRefs = [...Array(numLayers)].map(x => useRef(null))
+    const hiddenCanvasRefs = [...Array(numLayers)].map(x => useRef(null))
     const customs = [...Array(numLayers)].map(
       x => d3.select(document.createElement("custom"))
     )
     const canvases = canvasRefs.map(canvasRef => d3.select(canvasRef.current))
+    const hiddenCanvases = hiddenCanvasRefs.map(hiddenCanvasRef => d3.select(hiddenCanvasRef.current))
+    let colorToData = {};
 
     useEffect(() => {
 
@@ -26,15 +29,25 @@ export const MapCanvas = observer(
 
       for (let i = 0; i < numLayers; i++) {
         let canvas = canvases[i].node()
+        let hiddenCanvas = hiddenCanvases[i].node()
         let custom = customs[i]
         let layer = constant.layers[i]
         let data = store.embData[layer]
-        drawMap(canvas, custom, layer, data)
+        drawMap(canvas, custom, layer, data, false)
+        genMouseOver(hiddenCanvas, custom, data, layer)
       }
       
     }, [store.loadingEmbDone])
 
-    const drawMap = (canvas, custom, layer, data) => {
+    const getColor = (i) => {
+      let r = Math.floor(i / 256 / 256) % 256
+      let g = Math.floor(i / 256) % 256
+      let b = i % 256
+      return d3.rgb(r, g, b).toString();
+    }
+
+    const drawMap = (canvas, custom, layer, data, hidden) => {
+
       let context = canvas.getContext("2d")
       context.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -54,17 +67,39 @@ export const MapCanvas = observer(
         .attr("height", constant.embSize)
         .attr("x", (d) => store.xScale(d["emb"][store.epoch][0]))
         .attr("y", (d) => store.yScale(d["emb"][store.epoch][1]))
-        .attr("fill", d => constant.embColors[d['label']])
-        .on("mouseover", d => {
-          console.log(d)
-        })
+        .attr("fill", (d) => constant.embColors[d['label']])
         
-      custom.selectAll("rect").each(function() {
-        let sel = d3.select(this)
-        context.beginPath()
-        context.fillStyle = sel.attr("fill")
-        context.fillRect(sel.attr("x"), sel.attr("y"), 4, 4)
-      })
+      custom.selectAll("rect")
+        .each(function(d, i) {
+          let sel = d3.select(this)
+          context.beginPath()
+          if (hidden) {
+            let color = getColor(i)
+            colorToData[color] = {"i": i, "d": d}
+            context.fillStyle = color
+          } else {
+            context.fillStyle = sel.attr("fill")  
+          }
+          context.fillRect(sel.attr("x"), sel.attr("y"), 4, 4)
+        })
+
+    }
+
+    const genMouseOver = (hiddenCanvas, custom, data, layer) => {
+      
+      d3.select(`#map-canvas-${layer}`)
+        .on("mousemove", (e) => {
+          drawMap(hiddenCanvas, custom, layer, data, true)
+          let hiddenContext = hiddenCanvas.getContext("2d")
+          let [x, y] = [e.offsetX, e.offsetY]
+          let imageData = hiddenContext.getImageData(x, y, 1, 1).data
+          let color = d3.rgb.apply(null, imageData).toString()
+          let possibleDatum = colorToData[color]
+          if (possibleDatum) {
+            // console.log('!!!!')
+            console.log(possibleDatum)
+          }
+        })
     }
 
     const handleSliderChange = (e, val) => {
@@ -73,10 +108,12 @@ export const MapCanvas = observer(
 
       for (let i = 0; i < numLayers; i++) {
         let canvas = canvases[i].node()
+        let hiddenCanvas = hiddenCanvases[i].node()
         let custom = customs[i]
         let layer = constant.layers[i]
         let data = store.embData[layer]
-        drawMap(canvas, custom, layer, data)
+        drawMap(canvas, custom, layer, data, false)
+        genMouseOver(hiddenCanvas, custom, data, layer)
       }
 
     }
@@ -106,6 +143,14 @@ export const MapCanvas = observer(
                   className="map-canvas"
                   width={constant.mapWidth}
                   height={constant.mapHeight}
+                />
+                <canvas
+                  ref={hiddenCanvasRefs[i]}
+                  id={`map-hidden-canvas-${layer}`}
+                  className="map-hidden-canvas"
+                  width={constant.mapWidth}
+                  height={constant.mapHeight}
+                  style={{display: "none"}}
                 />
               </div>
             </div>
