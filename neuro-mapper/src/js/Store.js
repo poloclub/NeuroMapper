@@ -64,7 +64,8 @@ export class Store {
    */
 
   loadAllData() {
-    this.loadEmbData()
+    // this.loadEmbData()
+    this.loadAndParsePlotlyEmbData();
   }
 
   loadEmbData() {
@@ -137,6 +138,64 @@ export class Store {
       }
     }
     this.setEmbData(parsedEmbData)
+  }
+
+  loadAndParsePlotlyEmbData() {
+    let embData = {}
+    for (let layer of constant.layers) {
+      // Initialize embData
+      embData[layer] = {}
+
+      for (let epoch of constant.epochs) {
+        // Initialize embData
+        embData[layer][epoch] = {};
+        let xArr = [];
+        let yArr = [];
+        let labelArr = [];
+        let labelColor = [];
+        // File paths
+        let dirPath = [constant.embDir, layer].join('/')
+        let embFileName = `${dirPath}/${epoch}_embedding.csv`
+        let labelFileName = `${dirPath}/${epoch}_labels.csv`
+
+        // Load embedding and label data
+        fetch(embFileName)
+          .then(res => res.text())
+          .then(data => {
+            data = data
+              .split('\n')
+              .map(coord => coord.split(',').map(v => parseFloat(v)))
+              .slice(0, -1)
+              .forEach(values => {
+                xArr.push(values[0]);
+                yArr.push(values[1]);
+              })
+            embData[layer][epoch]['x'] = xArr;
+            embData[layer][epoch]['y'] = yArr;
+            
+            // Load label data
+            fetch(labelFileName)
+              .then(res => res.text())
+              .then(labelData => {
+                labelData = labelData
+                  .split('\n')
+                  .map(label => parseFloat(label))
+                  .slice(0, -1)
+                  .forEach(label => {
+                    labelArr.push(label);
+                    labelColor.push(constant.embColors[label])
+                  });
+                embData[layer][epoch]['label'] = labelArr;
+                embData[layer][epoch]['color'] = labelColor;
+                
+                if (this.isLast(layer, constant.layers) && this.isLast(epoch, constant.epochs)) {
+                  this.setEmbData(embData)
+                  this.setLoadingEmbDone(true)
+                }
+              })
+          })
+      }
+    }
   }
 
   /**
