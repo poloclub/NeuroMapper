@@ -9,48 +9,57 @@ export const MapCanvas = observer(
     store
   }) => {
 
+    // Global varaibles
     let numLayers = constant.layers.length
-    const canvasRefs = [...Array(numLayers)].map(x => useRef(null))
-    const hiddenCanvasRefs = [...Array(numLayers)].map(x => useRef(null))
-    const customs = [...Array(numLayers)].map(
-      x => d3.select(document.createElement("custom"))
-    )
-    const canvases = canvasRefs.map(canvasRef => d3.select(canvasRef.current))
-    const hiddenCanvases = hiddenCanvasRefs.map(hiddenCanvasRef => d3.select(hiddenCanvasRef.current))
     let colorToData = {};
 
-    useEffect(() => {
+    // Canvas layout
+    let mapSize = parseInt(window.innerWidth * constant.mapSizePercent / 100)
+    let selectedMapSize = parseInt(window.innerWidth * constant.selectedMapSizePercent / 100)
 
+    // Component references
+    const canvasRefs = [...Array(numLayers)].map(x => useRef(null))
+    const hiddenCanvasRefs = [...Array(numLayers)].map(x => useRef(null))
+    const customs = [...Array(numLayers)].map(x => d3.select(document.createElement("custom")))
+    const canvases = canvasRefs.map(canvasRef => d3.select(canvasRef.current))
+    const hiddenCanvases = hiddenCanvasRefs.map(hiddenCanvasRef => d3.select(hiddenCanvasRef.current))
+
+    // Rendering
+    useEffect(() => {
       if (!store.loadingEmbDone) {
         return;
       }
-
-      store.setXYScale()
-
+      setXYScale()
       for (let i = 0; i < numLayers; i++) {
-        let canvas = canvases[i].node()
-        let hiddenCanvas = hiddenCanvases[i].node()
-        let custom = customs[i]
-        let layer = constant.layers[i]
-        let data = store.embData[layer]
-        drawMap(canvas, custom, layer, data, false)
-        genMouseOver(hiddenCanvas, custom, data, layer)
+        drawLayerCanvas(i, 1)
       }
-      
     }, [store.loadingEmbDone])
 
-    const getColor = (i) => {
-      let r = Math.floor(i / 256 / 256) % 256
-      let g = Math.floor(i / 256) % 256
-      let b = i % 256
-      return d3.rgb(r, g, b).toString();
+
+    /*
+     * Draw maps
+     */
+
+    const setXYScale = () => {
+      let xScale = d3.scaleLinear()
+        .domain([store.embRange.x.min, store.embRange.x.max])
+        .range([0, mapSize])
+  
+      let yScale = d3.scaleLinear()
+        .domain([store.embRange.y.min, store.embRange.y.max])
+        .range([0, mapSize])
+
+      store.setXScale(xScale)
+      store.setYScale(yScale)
     }
 
     const drawMap = (canvas, custom, layer, data, hidden) => {
 
+      let ratio = (store.selectedLayerIdx != -1) ? selectedMapSize / mapSize : 1
       let context = canvas.getContext("2d")
-      context.clearRect(0, 0, canvas.width, canvas.height)
 
+      context.clearRect(0, 0, canvas.width, canvas.height)
+      
       custom.selectAll("rect")
         .data(data)
         .enter()
@@ -65,8 +74,8 @@ export const MapCanvas = observer(
         })
         .attr("width", constant.embSize)
         .attr("height", constant.embSize)
-        .attr("x", (d) => store.xScale(d["emb"][store.epoch][0]))
-        .attr("y", (d) => store.yScale(d["emb"][store.epoch][1]))
+        .attr("x", (d) => store.xScale(d["emb"][store.epoch][0]) * ratio)
+        .attr("y", (d) => store.yScale(d["emb"][store.epoch][1]) * ratio)
         .attr("fill", (d) => constant.embColors[d['label']])
         
       custom.selectAll("rect")
@@ -80,13 +89,35 @@ export const MapCanvas = observer(
           } else {
             context.fillStyle = sel.attr("fill")  
           }
-          context.fillRect(sel.attr("x"), sel.attr("y"), 4, 4)
+          context.fillRect(
+            sel.attr("x"), sel.attr("y"), constant.embSize, constant.embSize
+          )
         })
 
     }
 
+    const drawLayerCanvas = (i) => {
+      let canvas = canvases[i].node()
+      let hiddenCanvas = hiddenCanvases[i].node()
+      let custom = customs[i]
+      let layer = constant.layers[i]
+      let data = store.embData[layer]
+      drawMap(canvas, custom, layer, data, false)
+      genMouseOver(hiddenCanvas, custom, data, layer)
+    }
+    
+    /*
+     * Hovering a point
+     */
+
+    const getColor = (i) => {
+      let r = Math.floor(i / 256 / 256) % 256
+      let g = Math.floor(i / 256) % 256
+      let b = i % 256
+      return d3.rgb(r, g, b).toString();
+    }
+
     const genMouseOver = (hiddenCanvas, custom, data, layer) => {
-      
       d3.select(`#map-canvas-${layer}`)
         .on("mousemove", (e) => {
           drawMap(hiddenCanvas, custom, layer, data, true)
@@ -96,26 +127,43 @@ export const MapCanvas = observer(
           let color = d3.rgb.apply(null, imageData).toString()
           let possibleDatum = colorToData[color]
           if (possibleDatum) {
-            // console.log('!!!!')
             console.log(possibleDatum)
           }
         })
     }
 
+    /*
+     * Slider for selecting an epoch
+     */
+
     const handleSliderChange = (e, val) => {
       let epoch = val
       store.setEpoch(epoch)
-
       for (let i = 0; i < numLayers; i++) {
-        let canvas = canvases[i].node()
-        let hiddenCanvas = hiddenCanvases[i].node()
-        let custom = customs[i]
-        let layer = constant.layers[i]
-        let data = store.embData[layer]
-        drawMap(canvas, custom, layer, data, false)
-        genMouseOver(hiddenCanvas, custom, data, layer)
+        drawLayerCanvas(i)
+      }
+    }
+
+    /*
+     * Select a layer
+     */
+    const clickMapDiv = (e) => {
+
+      if (store.selectedLayerIdx != -1) {
+        return
       }
 
+      let i = parseInt(e.target.id.split('layer').slice(-1)[0]) - 1
+      store.setSelectedLayerIdx(i)
+      
+      let canvas = canvases[i].node()
+      let hiddenCanvas = hiddenCanvases[i].node()
+      canvas.width = selectedMapSize
+      canvas.height = selectedMapSize
+      hiddenCanvas.width = selectedMapSize
+      hiddenCanvas.height = selectedMapSize
+
+      drawLayerCanvas(i)
     }
 
     return (
@@ -134,23 +182,33 @@ export const MapCanvas = observer(
         />
         <div id="map-contents">
           {constant.layers.map((layer, i) => (
-            <div id={`map-${layer}`} className="map" key={layer}>
+            <div 
+              id={`map-${layer}`} 
+              className="map" key={layer}
+              style={{
+                display:
+                  store.selectedLayerIdx == -1 || store.selectedLayerIdx == i
+                    ? "block"
+                    : "none",
+              }}
+              onClick={clickMapDiv}
+            >
               <div className="map-title">{layer}</div>
               <div className="map-map">
                 <canvas 
                   ref={canvasRefs[i]} 
                   id={`map-canvas-${layer}`} 
                   className="map-canvas"
-                  width={constant.mapWidth}
-                  height={constant.mapHeight}
+                  width={mapSize}
+                  height={mapSize}
                 />
                 <canvas
                   ref={hiddenCanvasRefs[i]}
                   id={`map-hidden-canvas-${layer}`}
                   className="map-hidden-canvas"
-                  width={constant.mapWidth}
-                  height={constant.mapHeight}
-                  style={{display: "none"}}
+                  width={mapSize}
+                  height={mapSize}
+                  // style={{display: "none"}}
                 />
               </div>
             </div>
