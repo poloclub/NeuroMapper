@@ -58,6 +58,7 @@ export const MapCanvas = observer(
       let ratio = (store.selectedLayerIdx != -1) ? selectedMapSize / mapSize : 1
       let context = canvas.getContext("2d")
 
+      custom.selectAll("rect").remove()
       context.clearRect(0, 0, canvas.width, canvas.height)
       
       custom.selectAll("rect")
@@ -102,6 +103,13 @@ export const MapCanvas = observer(
       let custom = customs[i]
       let layer = constant.layers[i]
       let data = store.embData[layer]
+
+      let size = (store.selectedLayerIdx == -1) ? mapSize: selectedMapSize
+      canvas.width = size
+      canvas.height = size
+      hiddenCanvas.width = size
+      hiddenCanvas.height = size
+
       drawMap(canvas, custom, layer, data, false)
       genMouseOver(hiddenCanvas, custom, data, layer)
     }
@@ -147,22 +155,14 @@ export const MapCanvas = observer(
     /*
      * Select a layer
      */
-    const clickMapDiv = (e) => {
 
+    const clickMapDiv = (e) => {
       if (store.selectedLayerIdx != -1) {
         return
       }
 
       let i = parseInt(e.target.id.split('layer').slice(-1)[0]) - 1
       store.setSelectedLayerIdx(i)
-      
-      let canvas = canvases[i].node()
-      let hiddenCanvas = hiddenCanvases[i].node()
-      canvas.width = selectedMapSize
-      canvas.height = selectedMapSize
-      hiddenCanvas.width = selectedMapSize
-      hiddenCanvas.height = selectedMapSize
-
       drawLayerCanvas(i)
     }
 
@@ -201,6 +201,7 @@ export const MapCanvas = observer(
                   className="map-canvas"
                   width={mapSize}
                   height={mapSize}
+                  style={{border: "1px solid"}}
                 />
                 <canvas
                   ref={hiddenCanvasRefs[i]}
@@ -208,7 +209,7 @@ export const MapCanvas = observer(
                   className="map-hidden-canvas"
                   width={mapSize}
                   height={mapSize}
-                  // style={{display: "none"}}
+                  style={{display: "none"}}
                 />
               </div>
             </div>
