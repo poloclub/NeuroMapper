@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import { useEffect, useRef } from "react";
 import { Slider } from "@mui/material";
 import * as constant from "./constant.js";
-import { ScatterGL } from "scatter-gl";
+import { ScatterGL, RenderMode } from "scatter-gl";
 
 export const MapSVG = observer(
   ({
@@ -71,7 +71,6 @@ export const MapSVG = observer(
       });
       
       scatterGL.render(dataset);
-
       scatterGL.setPointColorer((i, selectedIndices, hoverIndex) => {
         const isSelected = selectedIndices.has(i);
         if (hoverIndex === i) {
@@ -101,7 +100,7 @@ export const MapSVG = observer(
         <Slider
           defaultValue={constant.epochs[0]}
           valueLabelDisplay="auto"
-          step={10}
+          step={5}
           min={constant.epochs[0]}
           max={constant.epochs.slice(-1)[0]}
           color="secondary"
