@@ -69,6 +69,8 @@ export class Store {
       setXScale: action,
       yScale: observable,
       setYScale: action,
+      embData: observable,
+      setEmbData: action,
       selectedLayerIdx: observable,
       setSelectedLayerIdx: action
     })

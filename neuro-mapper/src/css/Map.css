@@ -10,3 +10,8 @@
 #map-wrap {
   padding: 20px;
 }
+
+.scatter-gl-container-layer {
+  width: 290px; 
+  height: 290px;
+}

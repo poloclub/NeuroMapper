@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import { useEffect, useRef } from "react";
 import { Slider } from "@mui/material";
 import * as constant from "./constant.js";
+import { ScatterGL, RenderMode } from "scatter-gl";
 
 export const MapSVG = observer(
   ({
@@ -12,6 +13,7 @@ export const MapSVG = observer(
     let numLayers = constant.layers.length
     const svgRefs = [...Array(numLayers)].map(x => useRef(null))
     const gRefs = [...Array(numLayers)].map(x => useRef(null))
+    let gls = []
 
     useEffect(() => {
 
@@ -19,56 +21,16 @@ export const MapSVG = observer(
         return;
       }
 
-      store.setXYScale()
-
-      const svgs = svgRefs.map(svgRef => d3.select(svgRef.current))
-      const gs = gRefs.map(gRef => d3.select(gRef.current))
-
-      makeMapZoomable(svgs, gs)
+      if (gls.length == 0) {
       for (let i = 0; i < numLayers; i++) {
-        let g = gs[i]
         let layer = constant.layers[i]
-        let data = store.embData[layer]
-        drawMap(g, layer, data)
+        let points = store.embData[layer]
+        let curr_selector = `#scatter-gl-container-layer${i}`
+        renderScatterGL(points, curr_selector)
       }
+    }
       
     }, [store.loadingEmbDone])
-
-    const makeMapZoomable = (svgs, gs) => {
-      let numLayers = constant.layers.length
-      for (let i = 0; i < numLayers; i++) {
-        let zoom = d3
-          .zoom()
-          .scaleExtent([0.1, 3.5])
-          .extent([
-            [0, 0],
-            [constant.mapWidth, constant.mapHeight],
-          ])
-          .on("zoom", (e) => {
-            gs[i].attr("transform", e.transform);
-          });
-        svgs[i].call(zoom);
-      }
-    }
-
-    const drawMap = (g, layer, data) => {
-      g.selectAll("rect")
-        .data(data)
-        .join("rect")
-          .attr("id", (d, i) => `emb-${layer}-${i}`)
-          .attr("class", (d, i) => {
-            let c1 = "emb"
-            let c2 = `emb-${i}`
-            let c3 = `emb-${layer}`
-            let c4 = `emb-label-${d['label']}`
-            return [c1, c2, c3, c4].join(' ')
-          })
-          .attr("x", (d) => store.xScale(d['emb'][store.epoch][0]))
-          .attr("y", (d) => store.yScale(d['emb'][store.epoch][1]))
-          .attr("width", constant.embSize)
-          .attr("height", constant.embSize)
-          .attr("fill", d => constant.embColors[d['label']])
-    }
 
     const handleSliderChange = (e, val) => {
       let epoch = val
@@ -82,50 +44,67 @@ export const MapSVG = observer(
             .attr("y", (d) => store.yScale(d['emb'][epoch][1]))
       }
 
+      for (let i = 0; i < numLayers; i++) {
+        let layer = constant.layers[i]
+        let points = store.embData[layer]
+        let epoch = store.epoch
+        const dataset = new ScatterGL.Dataset(points.map((point => point['emb'][epoch])));
+        gls[i].updateDataset(dataset)
+      }
+      document.getElementById("epoch-val").innerText = `epoch = ${epoch}`
+    }
+
+    let renderScatterGL = (points, selector) => {
+      let epoch = store.epoch
+      const dataset = new ScatterGL.Dataset(points.map((point => point['emb'][epoch])));
+      
+      const labels = points.map(point => point['label']);
+      let containerElement = document.querySelector(selector);
+      const scatterGL = new ScatterGL(containerElement, {
+        camera: {
+          //zoom: 2.125
+        },
+        orbitControls: {
+          // zoomSpeed: 1.125
+        }
+      });
+      
+      scatterGL.render(dataset);
+      scatterGL.setPointColorer((i, selectedIndices, hoverIndex) => {
+        const isSelected = selectedIndices.has(i);
+        if (hoverIndex === i) {
+          return "red";
+        }
+        return isSelected
+          ? constant.opaqueColorsByLabel[labels[i]]
+          : constant.heavyTransparentColorsByLabel[labels[i]];
+      });
+
+      gls.push(scatterGL)
+
     }
 
     return (
       <div id="map-wrap">
-        <div id="epoch-val">
-          epoch = {store.epoch}
-        </div>
+        <div id="map-contents">
+        {constant.layers.map((layer, i) => {
+            let curr_id = `scatter-gl-container-layer${i}`
+            return (
+              <div id={curr_id} class={`scatter-gl-container-layer`}>
+              </div>
+            )
+          })}
         <Slider
           defaultValue={constant.epochs[0]}
           valueLabelDisplay="auto"
-          step={10}
+          step={5}
           min={constant.epochs[0]}
           max={constant.epochs.slice(-1)[0]}
           color="secondary"
           onChange={handleSliderChange}
         />
-        <div id="map-contents">
-          {constant.layers.map((layer, i) => (
-            <div id={`map-${layer}`} className="map" key={layer}>
-              <div className="map-title">{layer}</div>
-              <div className="map-map">
-                <svg 
-                  ref={svgRefs[i]} 
-                  id={`map-svg-${layer}`}
-                  className="map-svg"
-                  width={constant.mapWidth}
-                  height={constant.mapHeight}
-                >
-                  <rect 
-                    id={`map-bg-${layer}`} 
-                    className="map-bg"
-                    width={constant.mapWidth}
-                    height={constant.mapHeight}
-                    fill={constant.mapBgColor}
-                  />
-                  <g 
-                    ref={gRefs[i]} 
-                    id={`map-g-${layer}`} 
-                    className="map-g"
-                  />
-                </svg>
-              </div>
-            </div>
-          ))}
+        <div id="epoch-val">
+          epoch = {constant.epochs[0]}
         </div>
       </div>
     )

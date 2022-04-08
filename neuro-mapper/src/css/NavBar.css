@@ -1,0 +1,6 @@
+/* Add a black background color to the top navigation */
+.topnav {
+    background-color: #1C3543;
+    overflow: hidden;
+    height: 50px;
+  }

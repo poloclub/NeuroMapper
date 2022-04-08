@@ -1,8 +1,9 @@
 import './css/App.css';
 import './css/Map.css';
+import './css/NavBar.css'
 
-// import { MapSVG } from "./js/MapSVG.js";
-import { MapCanvas } from "./js/MapCanvas.js";
+import { MapSVG } from "./js/MapSVG.js";
+import { NavBar } from "./js/NavBar.js"
 import { Store } from "./js/Store.js";
 
 let store = new Store();
@@ -11,8 +12,8 @@ function App() {
   return (
     <div className="App">
       <div id="App-main">
-        {/* <MapSVG store={store}/> */}
-        <MapCanvas store={store}/>
+        <NavBar store={store}/>
+        <MapSVG store={store}/>
       </div>
     </div>
   );
