@@ -1,4 +1,3 @@
-import * as d3 from "d3";
 import { observable, makeObservable, action } from "mobx";
 import * as constant from "./constant.js";
 
@@ -16,14 +15,20 @@ export class Store {
   /**
    * embData
    */
+
+  loadingEmbDone = false
+  setLoadingEmbDone(loadingEmbDone) {
+    this.loadingEmbDone = loadingEmbDone
+  }
+
   embData = {}
   setEmbData(embData) {
     this.embData = embData
   }
 
-  loadingEmbDone = false
-  setLoadingEmbDone(loadingEmbDone) {
-    this.loadingEmbDone = loadingEmbDone
+  embRange = {}
+  setEmbRange(embRange) {
+    this.embRange = embRange
   }
 
   xScale = null
@@ -37,6 +42,15 @@ export class Store {
   }
 
   /**
+   * Selected layer
+   */
+  
+  selectedLayerIdx = -1
+  setSelectedLayerIdx(selectedLayerIdx) {
+    this.selectedLayerIdx = selectedLayerIdx
+  }
+
+  /**
    * Constructor of Store
    */
 
@@ -47,12 +61,18 @@ export class Store {
       setEpoch: action,
       loadingEmbDone: observable,
       setLoadingEmbDone: action,
+      embData: observable,
+      setEmbData: action,
+      embRange: observable,
+      setEmbRange: action,
       xScale: observable,
       setXScale: action,
       yScale: observable,
       setYScale: action,
       embData: observable,
       setEmbData: action,
+      selectedLayerIdx: observable,
+      setSelectedLayerIdx: action
     })
 
     // Load data
@@ -137,18 +157,12 @@ export class Store {
       }
     }
     this.setEmbData(parsedEmbData)
+    this.setEmbRange(this.getMinMaxCoord())
   }
 
   /**
    * Embedding xy scale
    */
-
-  setXYScale = () => {
-    let embRange = this.getMinMaxCoord()
-    let [xScale, yScale] = this.getScale(embRange)
-    this.setXScale(xScale)
-    this.setYScale(yScale)
-  }
 
   getMinMaxCoord = () => {
     let [minX, maxX, minY, maxY] = [0, 0, 0, 0]
@@ -187,18 +201,6 @@ export class Store {
     } else {
       return b
     }
-  }
-
-  getScale = (embRange) => {
-    let xScale = d3.scaleLinear()
-      .domain([embRange.x.min, embRange.x.max])
-      .range([0, constant.mapWidth])
-
-    let yScale = d3.scaleLinear()
-      .domain([embRange.y.min, embRange.y.max])
-      .range([0, constant.mapHeight])
-
-    return [xScale, yScale]
   }
 
 }

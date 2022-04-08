@@ -51,7 +51,6 @@ export const MapSVG = observer(
         const dataset = new ScatterGL.Dataset(points.map((point => point['emb'][epoch])));
         gls[i].updateDataset(dataset)
       }
-
       document.getElementById("epoch-val").innerText = `epoch = ${epoch}`
     }
 
@@ -87,7 +86,6 @@ export const MapSVG = observer(
 
     return (
       <div id="map-wrap">
-        
         <div id="map-contents">
         {constant.layers.map((layer, i) => {
             let curr_id = `scatter-gl-container-layer${i}`
@@ -96,7 +94,6 @@ export const MapSVG = observer(
               </div>
             )
           })}
-        </div>
         <Slider
           defaultValue={constant.epochs[0]}
           valueLabelDisplay="auto"
