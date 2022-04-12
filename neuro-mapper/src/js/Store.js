@@ -50,6 +50,29 @@ export class Store {
     this.selectedLayerIdx = selectedLayerIdx
   }
 
+  hoverImageIndex = null
+  setHoverImageIndex(hoverImageIndex) {
+    this.hoverImageIndex = hoverImageIndex
+  }
+
+  plots = []
+  setPlots(plots) {
+    this.plots = plots
+  }
+
+  setPlotsIndex(index, plot) {
+    this.plots[index] = plot
+  }
+
+  addPlot(plot) {
+    this.plots.push(plot)
+  }
+  
+  renderMode = "point"
+  setRenderMode(renderMode) {
+    this.renderMode = renderMode
+  }
+
   /**
    * Constructor of Store
    */
@@ -72,7 +95,15 @@ export class Store {
       embData: observable,
       setEmbData: action,
       selectedLayerIdx: observable,
-      setSelectedLayerIdx: action
+      setSelectedLayerIdx: action,
+      hoverImageIndex: observable,
+      setHoverImageIndex: action,
+      plots: observable,
+      setPlots: action,
+      setPlotsIndex: action,
+      addPlot: action,
+      renderMode: observable,
+      setRenderMode: action
     })
 
     // Load data

@@ -2,7 +2,7 @@ import './css/App.css';
 import './css/Map.css';
 import './css/NavBar.css'
 
-import { MapSVG } from "./js/MapSVG.js";
+import { MapSVG } from "./js/MapScatterGL.js";
 import { NavBar } from "./js/NavBar.js"
 import { Store } from "./js/Store.js";
 
