@@ -1,17 +1,26 @@
-#map-contents {
-  display: flex;
-  justify-content: space-evenly;
-}
-
 .map {
   padding: 10px;
 }
 
 #map-wrap {
   padding: 20px;
+  float: left;
 }
 
 .scatter-gl-container-layer {
-  width: 400px; 
-  height: 400px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
+
+#epoch-val {
+  text-align: center;
+}
+
+#map-contents{
+  background-color:#fff;
+  display:grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 400px 400px;
+}
+

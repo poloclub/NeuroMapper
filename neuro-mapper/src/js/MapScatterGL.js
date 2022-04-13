@@ -1,11 +1,12 @@
 import * as d3 from "d3";
 import { observer } from "mobx-react";
 import { useEffect, useRef } from "react";
-import { Slider } from "@mui/material";
+
 import * as constant from "./constant.js";
 import { ScatterGL, RenderMode } from "scatter-gl";
+import { EpochControl } from "./EpochControl.js";
 
-export const MapSVG = observer(
+export const MapScatterGL = observer(
   ({
     store
   }) => {
@@ -48,33 +49,6 @@ export const MapSVG = observer(
         glCanvas.style.left = "" + (rect.left+window.scrollX) + "px"
         glCanvas.style.top = "" + (rect.top+window.scrollY) + "px"
       }
-    }
-
-    const handleSliderChange = (e, val) => {
-      let epoch = val
-      store.setEpoch(epoch)
-
-      for (let i = 0; i < numLayers; i++) {
-        let layer = constant.layers[i]
-        let points = store.embData[layer]
-        let epoch = store.epoch
-        const labels = points.map((point => point['label']))
-        const datapoints = points.map((point => point['emb'][epoch]))
-        const metadata = [];
-        labels.forEach(element => {
-          metadata.push({
-            labelIndex: element,
-            label: constant.cifar_10_classes[element]
-          })
-        });
-        const dataset = new ScatterGL.Dataset(datapoints, metadata);
-        dataset.setSpriteMetadata({
-          spriteImage: 'spritesheet.png',
-          singleSpriteSize: [32, 32],
-        });
-        store.plots[i].updateDataset(dataset)
-      }
-      document.getElementById("epoch-val").innerText = `epoch = ${epoch}`
     }
 
     let renderScatterGL = (points, selector) => {
@@ -136,9 +110,6 @@ export const MapSVG = observer(
 
     return (
       <div id="map-wrap">
-        <div id="image-index">
-          Hover Image Index = {store.hoverImageIndex==null? "None" : store.hoverImageIndex}
-        </div>
         <div id="map-contents">
         {constant.layers.map((layer, i) => {
             let curr_id = `scatter-gl-container-layer${i}`
@@ -148,18 +119,7 @@ export const MapSVG = observer(
             )
           })}
         </div>
-        <Slider
-          defaultValue={constant.epochs[0]}
-          valueLabelDisplay="auto"
-          step={5}
-          min={constant.epochs[0]}
-          max={constant.epochs.slice(-1)[0]}
-          color="secondary"
-          onChange={handleSliderChange}
-        />
-        <div id="epoch-val">
-          epoch = {constant.epochs[0]}
-        </div>
+        <EpochControl store={store}/>
       </div>
     )
     
