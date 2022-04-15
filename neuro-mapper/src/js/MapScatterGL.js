@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import * as constant from "./constant.js";
 import { ScatterGL, RenderMode } from "scatter-gl";
 import { EpochControl } from "./EpochControl.js";
+import { HyperparameterMenu } from "./HyperparameterMenu"
 
 export const MapScatterGL = observer(
   ({
@@ -112,9 +113,14 @@ export const MapScatterGL = observer(
       <div id="map-wrap">
         <div id="map-contents">
         {constant.layers.map((layer, i) => {
-            let curr_id = `scatter-gl-container-layer${i}`
+            let curr_id = `scatter-gl-wrapper-layer${i}`
+            let curr_scattergl_id = `scatter-gl-container-layer${i}`
             return (
-              <div id={curr_id} className={`scatter-gl-container-layer`}>
+              <div id={curr_id} className='scatter-gl-wrapper-layer'> 
+                <HyperparameterMenu/>
+                <div id={curr_scattergl_id} className={`scatter-gl-container-layer`}>
+                </div>
+                
               </div>
             )
           })}
