@@ -8,6 +8,7 @@ import SkipPreviousRoundedIcon from "@mui/icons-material/SkipPreviousRounded";
 import * as constant from "./constant.js";
 
 export const EpochControlBottons = observer(({ store }) => {
+  let numEpochs = constant.epochs.length;
 
   const handleEpochChange = (epoch) => {
     store.setEpoch(epoch);
@@ -34,34 +35,44 @@ export const EpochControlBottons = observer(({ store }) => {
     }
   };
 
+  const getCurrentEpochIdx = () => {
+    return constant.epochs.indexOf(store.epoch);
+  };
+
   const clickPrevious = (e) => {
-    let epochIdx = constant.epochs.indexOf(store.epoch)
+    let epochIdx = getCurrentEpochIdx();
     if (epochIdx == 0) {
       return;
     }
-
-    let prevEpoch = constant.epochs[epochIdx - 1]
-    handleEpochChange(prevEpoch)
-  }
+    let prevEpoch = constant.epochs[epochIdx - 1];
+    handleEpochChange(prevEpoch);
+  };
 
   const clickPlay = (e) => {
-    store.setAnimationStatus("play")
-  }
+    store.setAnimationStatus("play");
+    let epochIdx = getCurrentEpochIdx();
+    for (let i = epochIdx + 1; i < numEpochs; i++) {
+      if (store.animationStatus == "pause") {
+        break;
+      }
+      let epoch = constant.epochs[i];
+      console.log(epoch)
+      handleEpochChange(epoch);
+    }
+  };
 
   const clickPause = (e) => {
-    store.setAnimationStatus("pause")
-  }
+    store.setAnimationStatus("pause");
+  };
 
   const clickNext = (e) => {
-    console.log("click next")
-    let epochIdx = constant.epochs.indexOf(store.epoch)
-    if (epochIdx == constant.epochs.length - 1) {
+    let epochIdx = getCurrentEpochIdx();
+    if (epochIdx == numEpochs - 1) {
       return;
     }
-
-    let nextEpoch = constant.epochs[epochIdx + 1]
-    handleEpochChange(nextEpoch)
-  }
+    let nextEpoch = constant.epochs[epochIdx + 1];
+    handleEpochChange(nextEpoch);
+  };
 
   return (
     <div id="epoch-control-buttons">
