@@ -58,6 +58,10 @@ export const EpochControlBottons = observer(({ store }) => {
       let epoch = constant.epochs[i];
       console.log(epoch)
       handleEpochChange(epoch);
+
+      if (i == numEpochs - 1) {
+        store.setAnimationStatus("pause");
+      }
     }
   };
 
