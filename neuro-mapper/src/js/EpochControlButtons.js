@@ -12,11 +12,11 @@ export const EpochControlBottons = observer(({ store }) => {
 
   const handleEpochChange = (epoch) => {
     store.setEpoch(epoch);
+    console.log("store.epoch:", store.epoch)
 
     for (let i = 0; i < constant.layers.length; i++) {
       let layer = constant.layers[i];
       let points = store.embData[layer];
-      let epoch = store.epoch;
       const labels = points.map((point) => point["label"]);
       const datapoints = points.map((point) => point["emb"][epoch]);
       const metadata = [];
@@ -33,6 +33,8 @@ export const EpochControlBottons = observer(({ store }) => {
       });
       store.plots[i].updateDataset(dataset);
     }
+
+    // wait(500)
   };
 
   const getCurrentEpochIdx = () => {
@@ -51,17 +53,26 @@ export const EpochControlBottons = observer(({ store }) => {
   const clickPlay = (e) => {
     store.setAnimationStatus("play");
     let epochIdx = getCurrentEpochIdx();
-    for (let i = epochIdx + 1; i < numEpochs; i++) {
+
+    // for (let i = epochIdx + 1; i < numEpochs; i++) {
+    //   if (store.animationStatus == "pause") {
+    //     break;
+    //   }
+    //   let epoch = constant.epochs[i];
+    //   handleEpochChange(epoch);
+    // }
+
+    for (let i = epochIdx; i < numEpochs; i++) {
       if (store.animationStatus == "pause") {
         break;
       }
-      let epoch = constant.epochs[i];
-      console.log(epoch)
-      handleEpochChange(epoch);
-
-      if (i == numEpochs - 1) {
-        store.setAnimationStatus("pause");
-      }
+      clickNext()
+    }
+    
+    epochIdx = getCurrentEpochIdx();
+    console.log("epochIdx:", epochIdx, numEpochs)
+    if (epochIdx == numEpochs - 1) {
+      store.setAnimationStatus("pause");
     }
   };
 
@@ -76,6 +87,14 @@ export const EpochControlBottons = observer(({ store }) => {
     }
     let nextEpoch = constant.epochs[epochIdx + 1];
     handleEpochChange(nextEpoch);
+  };
+
+  const wait = (ms) => {
+    var d = new Date();
+    var d2 = null;
+    do {
+      d2 = new Date();
+    } while (d2 - d < ms);
   };
 
   return (
