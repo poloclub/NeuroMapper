@@ -1,11 +1,5 @@
 import { observer } from "mobx-react";
 
-export const NavBar = observer(
-    ({
-      store
-    }) => {
-        return (
-            <div class="topnav">
-            </div>
-        )
-    })
+export const NavBar = observer(({ store }) => {
+  return <div className="topnav"/>;
+});
