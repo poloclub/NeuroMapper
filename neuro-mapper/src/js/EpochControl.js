@@ -1,8 +1,8 @@
-import { useEffect, useRef } from "react";
 import * as constant from "./constant.js";
 import { observer } from "mobx-react";
 import { Slider } from "@mui/material";
 import { ScatterGL, RenderMode } from "scatter-gl";
+import { EpochControlBottons } from "./EpochControlButtons.js";
 
 export const EpochControl = observer(({ store }) => {
   const handleSliderChange = (e, val) => {
@@ -34,7 +34,7 @@ export const EpochControl = observer(({ store }) => {
   return (
     <div id="epoch-control">
       <Slider
-        defaultValue={constant.epochs[0]}
+        value={store.epoch}
         valueLabelDisplay="auto"
         step={5}
         min={constant.epochs[0]}
@@ -43,6 +43,7 @@ export const EpochControl = observer(({ store }) => {
         onChange={handleSliderChange}
       />
       <div id="epoch-val">epoch = {store.epoch}</div>
+      <EpochControlBottons store={store} />
     </div>
   );
 });
