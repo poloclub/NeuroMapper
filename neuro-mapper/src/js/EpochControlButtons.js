@@ -66,7 +66,11 @@ export const EpochControlBottons = observer(({ store }) => {
       if (store.animationStatus == "pause") {
         break;
       }
-      clickNext()
+      setTimeout(function() { 
+        if (store.animationStatus == "play") {
+          clickNext()
+        }
+      }.bind(this), 50)
     }
     
     epochIdx = getCurrentEpochIdx();
