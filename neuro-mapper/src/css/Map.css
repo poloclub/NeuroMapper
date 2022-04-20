@@ -17,6 +17,13 @@
   margin-right: auto;
 }
 
+.scatter-gl-layer-label {
+  margin-top: -400px;
+  font-size: large;
+  padding-left: 10px;
+  padding-top: 5px;
+}
+
 #epoch-val {
   text-align: center;
 }
