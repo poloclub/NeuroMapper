@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
-import { useEffect, useRef } from "react";
 import { Slider } from "@mui/material";
+import * as constant from "./constant.js";
 
 export const HyperparameterMenu = observer(
     ({
@@ -25,7 +25,7 @@ export const HyperparameterMenu = observer(
                 <div id="nn-text" className="hp-text">N-Neighbors</div>
                 <div id="nn-slider" className="hp-slider">
                     <Slider
-                        defaultValue={store.nNeighbors[index]}
+                        defaultValue={constant.defaultNNeighbors[index]}
                         valueLabelDisplay="auto"
                         step={null}
                         marks={[{value: 5}, {value: 20}, {value: 100}]}
@@ -34,7 +34,7 @@ export const HyperparameterMenu = observer(
                 <div id="md-text" className="hp-text">Min Distance</div>
                 <div id="md-slider" className="hp-slider">
                     <Slider
-                        defaultValue={store.minDists[index]}
+                        defaultValue={constant.defaultMinDist[index]}
                         min={0}
                         max={1}
                         valueLabelDisplay="auto"
@@ -46,7 +46,7 @@ export const HyperparameterMenu = observer(
                 <div id="md-text" className="hp-text">Sample Size</div>
                 <div id="md-slider" className="hp-slider">
                     <Slider
-                        defaultValue={store.sampleSize[index]}
+                        defaultValue={constant.defaultSampleSize[index]}
                         min={0}
                         max={10000}
                         valueLabelDisplay="auto"

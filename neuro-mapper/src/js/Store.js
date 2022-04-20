@@ -73,17 +73,17 @@ export class Store {
     this.renderMode = renderMode
   }
 
-  nNeighbors = [20, 20, 20, 20]
+  nNeighbors = constant.defaultNNeighbors
   setNNeighbors(index, value) {
     this.nNeighbors[index] = value
   }
 
-  minDists = [0.1, 0.1, 0.1, 0.1]
+  minDists = constant.defaultMinDist
   setMinDists(index, value) {
     this.minDists[index] = value
   }
 
-  sampleSize = [10000, 10000, 10000, 10000]
+  sampleSize = constant.defaultSampleSize
   setSampleSize(index, value) {
     this.sampleSize[index] = value
   }
@@ -106,8 +106,6 @@ export class Store {
       setXScale: action,
       yScale: observable,
       setYScale: action,
-      embData: observable,
-      setEmbData: action,
       selectedLayerIdx: observable,
       setSelectedLayerIdx: action,
       hoverImageIndex: observable,
