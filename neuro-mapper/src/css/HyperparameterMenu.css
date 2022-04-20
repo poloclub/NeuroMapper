@@ -1,0 +1,16 @@
+.hp-text {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 16px;
+    text-align: left;
+    margin-left: 10px;
+    padding-top: 10px;
+    color: #FFFFFF;
+}
+
+.hp-slider {
+    margin-left: 20px;
+    margin-right: 20px;
+}

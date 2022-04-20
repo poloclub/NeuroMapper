@@ -73,6 +73,20 @@ export class Store {
     this.renderMode = renderMode
   }
 
+  nNeighbors = [20, 20, 20, 20]
+  setNNeighbors(index, value) {
+    this.nNeighbors[index] = value
+  }
+
+  minDists = [0.1, 0.1, 0.1, 0.1]
+  setMinDists(index, value) {
+    this.minDists[index] = value
+  }
+
+  sampleSize = [10000, 10000, 10000, 10000]
+  setSampleSize(index, value) {
+    this.sampleSize[index] = value
+  }
   /**
    * Constructor of Store
    */
@@ -103,7 +117,13 @@ export class Store {
       setPlotsIndex: action,
       addPlot: action,
       renderMode: observable,
-      setRenderMode: action
+      setRenderMode: action,
+      nNeighbors: observable,
+      setNNeighbors: action,
+      minDists: observable,
+      setMinDists: action,
+      sampleSize: observable,
+      setSampleSize: action
     })
 
     // Load data
