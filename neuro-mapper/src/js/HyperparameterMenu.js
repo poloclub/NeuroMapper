@@ -2,6 +2,9 @@ import { observer } from "mobx-react";
 import { Slider } from "@mui/material";
 import * as constant from "./constant.js";
 
+const NNeighborsValues = [5, 20, 100];
+const MinDistsValues = [0.1, 0.5]
+
 export const HyperparameterMenu = observer(
     ({
       store,
@@ -9,15 +12,23 @@ export const HyperparameterMenu = observer(
     }) => {
 
         let handleNNeighborsSliderChange = (e, val) => {
-            store.setNNeighbors(index, val)
+            store.setNNeighbors(index, NNeighborsValues[val])
         }
 
         let handleMinDistsSliderChange = (e, val) => {
-            store.setMinDists(index, val)
+            store.setMinDists(index, MinDistsValues[val])
         }
 
         let handleSampleSizeSliderChange = (e, val) => {
             store.setSampleSize(index, val)
+        }
+
+        let NNeighborsLabelFormat = (value) => {
+            return NNeighborsValues[value];
+        }
+
+        let MinDistsLabelFormat = (value) => {
+            return MinDistsValues[value];
         }
 
         return (
@@ -25,21 +36,25 @@ export const HyperparameterMenu = observer(
                 <div id="nn-text" className="hp-text">N-Neighbors</div>
                 <div id="nn-slider" className="hp-slider">
                     <Slider
-                        defaultValue={constant.defaultNNeighbors[index]}
+                        defaultValue={NNeighborsValues.indexOf(constant.defaultNNeighbors[index])}
+                        valueLabelFormat={NNeighborsLabelFormat}
                         valueLabelDisplay="auto"
-                        step={null}
-                        marks={[{value: 5}, {value: 20}, {value: 100}]}
+                        min={0}
+                        step={1}
+                        max={NNeighborsValues.length - 1}
+                        marks
                         onChange={handleNNeighborsSliderChange} />
                 </div>
                 <div id="md-text" className="hp-text">Min Distance</div>
                 <div id="md-slider" className="hp-slider">
                     <Slider
-                        defaultValue={constant.defaultMinDist[index]}
-                        min={0}
-                        max={1}
+                        defaultValue={MinDistsValues.indexOf(constant.defaultMinDist[index])}
+                        valueLabelFormat={MinDistsLabelFormat}
                         valueLabelDisplay="auto"
-                        step={null}
-                        marks={[{value: 0.1}, {value: 0.5}]}
+                        min={0}
+                        step={1}
+                        max={MinDistsValues.length - 1}
+                        marks
                         onChange={handleMinDistsSliderChange}
                     />
                 </div>
