@@ -5,6 +5,7 @@ import * as constant from "./constant.js";
 import { ScatterGL } from "scatter-gl";
 import { EpochControl } from "./EpochControl.js";
 import { HyperparameterMenu } from "./HyperparameterMenu"
+import { LabelMenu } from "./LabelMenu.js";
 
 export const MapScatterGL = observer(({ store }) => {
   let numLayers = constant.layers.length;
@@ -106,6 +107,9 @@ export const MapScatterGL = observer(({ store }) => {
 
   return (
     <div id="map-wrap">
+      <div className="label-menu">
+        <LabelMenu/>
+      </div>
       <div id="map-contents">
         {constant.layers.map((layer, i) => {
             let curr_id = `scatter-gl-wrapper-layer${i}`
