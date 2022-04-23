@@ -4,13 +4,24 @@
 
 #map-wrap {
   padding: 20px;
-  float: left;
 }
 
 .scatter-gl-container-layer {
-  display:flex;
-  align-items:center;
   justify-content:center;
+  width: 400px;
+  height: 400px;
+}
+
+.scatter-gl-wrapper-layer {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.scatter-gl-layer-label {
+  margin-top: -400px;
+  font-size: large;
+  padding-left: 10px;
+  padding-top: 5px;
 }
 
 #epoch-val {
@@ -20,7 +31,15 @@
 #map-contents{
   background-color:#fff;
   display:grid;
-  grid-template-columns: 50% 50%;
-  grid-template-rows: 400px 400px;
+  grid-template-columns: 25% 25% 25% 25%;
+  grid-template-rows: 100%;
+  height: 80%;
+  min-height: 80vh;
+}
+
+.hyperparameter-menu{
+  width: 400px;
+  height: 200px;
+  background-color: #1C3543;
 }
 

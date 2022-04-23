@@ -2,8 +2,9 @@ import { observer } from "mobx-react";
 import { useEffect } from "react";
 
 import * as constant from "./constant.js";
-import { ScatterGL, RenderMode } from "scatter-gl";
+import { ScatterGL } from "scatter-gl";
 import { EpochControl } from "./EpochControl.js";
+import { HyperparameterMenu } from "./HyperparameterMenu"
 
 export const MapScatterGL = observer(({ store }) => {
   let numLayers = constant.layers.length;
@@ -13,7 +14,7 @@ export const MapScatterGL = observer(({ store }) => {
       return;
     }
 
-    if (store.plots.length == 0) {
+    if (store.plots.length === 0) {
       for (let i = 0; i < numLayers; i++) {
         let layer = constant.layers[i];
         let points = store.embData[layer];
@@ -93,11 +94,11 @@ export const MapScatterGL = observer(({ store }) => {
         : constant.heavyTransparentColorsByLabel[labels[i]];
     });
 
-    if (store.renderMode == "point") {
+    if (store.renderMode === "point") {
       scatterGL.setPointRenderMode();
-    } else if (store.renderMode == "sprite") {
+    } else if (store.renderMode === "sprite") {
       scatterGL.setSpriteRenderMode();
-    } else if (store.renderMode == "text") {
+    } else if (store.renderMode === "text") {
       scatterGL.setTextRenderMode();
     }
     store.addPlot(scatterGL);
@@ -107,11 +108,21 @@ export const MapScatterGL = observer(({ store }) => {
     <div id="map-wrap">
       <div id="map-contents">
         {constant.layers.map((layer, i) => {
-          let curr_id = `scatter-gl-container-layer${i}`;
-          return <div id={curr_id} className={`scatter-gl-container-layer`} key={curr_id} />;
-        })}
+            let curr_id = `scatter-gl-wrapper-layer${i}`
+            let curr_scattergl_id = `scatter-gl-container-layer${i}`
+            return (
+              <div id={curr_id} className='scatter-gl-wrapper-layer'> 
+                <HyperparameterMenu store={store} index={i}/>
+                <div id={curr_scattergl_id} className={`scatter-gl-container-layer`}>
+                </div>
+                <div className={`scatter-gl-layer-label`}>
+                  Layer {i + 1}
+                </div>
+              </div>
+            )
+          })}
       </div>
-      <EpochControl store={store} />
+        <EpochControl store={store}/>
     </div>
   );
 });
