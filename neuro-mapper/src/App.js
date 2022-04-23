@@ -1,7 +1,7 @@
 import './css/App.css';
 import './css/Map.css';
 import './css/NavBar.css'
-
+import './css/HyperparameterMenu.css'
 
 import { MapScatterGL } from "./js/MapScatterGL.js";
 import { NavBar } from "./js/NavBar.js"
