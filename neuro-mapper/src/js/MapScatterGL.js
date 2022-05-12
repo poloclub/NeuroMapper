@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import * as constant from "./constant.js";
 import { ScatterGL } from "scatter-gl";
 import { EpochControl } from "./EpochControl.js";
-import { HyperparameterMenu } from "./HyperparameterMenu"
+import { HyperparameterMenu } from "./HyperparameterMenu";
+import { NeighborView } from "./NeighborView.js";
 
 export const MapScatterGL = observer(({ store }) => {
   let numLayers = constant.layers.length;
@@ -108,21 +109,22 @@ export const MapScatterGL = observer(({ store }) => {
     <div id="map-wrap">
       <div id="map-contents">
         {constant.layers.map((layer, i) => {
-            let curr_id = `scatter-gl-wrapper-layer${i}`
-            let curr_scattergl_id = `scatter-gl-container-layer${i}`
-            return (
-              <div id={curr_id} className='scatter-gl-wrapper-layer'> 
-                <HyperparameterMenu store={store} index={i}/>
-                <div id={curr_scattergl_id} className={`scatter-gl-container-layer`}>
-                </div>
-                <div className={`scatter-gl-layer-label`}>
-                  Layer {i + 1}
-                </div>
-              </div>
-            )
-          })}
+          let curr_id = `scatter-gl-wrapper-layer${i}`;
+          let curr_scattergl_id = `scatter-gl-container-layer${i}`;
+          return (
+            <div id={curr_id} className="scatter-gl-wrapper-layer">
+              <div className={`scatter-gl-layer-label`}> Layer {i + 1} </div>
+              <div
+                id={curr_scattergl_id}
+                className={`scatter-gl-container-layer`}
+              />
+              <HyperparameterMenu store={store} index={i} />
+              <NeighborView store={store} index={i} />
+            </div>
+          );
+        })}
       </div>
-        <EpochControl store={store}/>
+      <EpochControl store={store} />
     </div>
   );
 });
