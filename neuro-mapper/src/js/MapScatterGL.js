@@ -53,6 +53,7 @@ export const MapScatterGL = observer(({ store }) => {
     let epoch = store.epoch;
     const labels = points.map((point) => point["label"]);
     const datapoints = points.map((point) => point["emb"][epoch]);
+
     const metadata = [];
     labels.forEach((element) => {
       metadata.push({
@@ -62,7 +63,6 @@ export const MapScatterGL = observer(({ store }) => {
     });
 
     const dataset = new ScatterGL.Dataset(datapoints, metadata);
-
     dataset.setSpriteMetadata({
       spriteImage: "spritesheet.png",
       singleSpriteSize: [32, 32],
@@ -108,7 +108,7 @@ export const MapScatterGL = observer(({ store }) => {
   return (
     <div id="map-wrap">
       <div className="label-menu">
-        <LabelMenu/>
+        <LabelMenu store={store}/>
       </div>
       <div id="map-contents">
         {constant.layers.map((layer, i) => {

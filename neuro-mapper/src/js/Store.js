@@ -108,6 +108,11 @@ export class Store {
   setSampleSize(index, value) {
     this.sampleSize[index] = value
   }
+
+  showLabels = constant.cifar_10_classes
+  setShowLabels(value) {
+    this.showLabels = value
+  }
   /**
    * Constructor of Store
    */
@@ -144,7 +149,9 @@ export class Store {
       minDists: observable,
       setMinDists: action,
       sampleSize: observable,
-      setSampleSize: action
+      setSampleSize: action,
+      showLabels: observable,
+      setShowLabels: action,
     })
 
     // Load data
