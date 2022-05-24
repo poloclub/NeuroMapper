@@ -1,0 +1,8 @@
+#epoch-control-buttons {
+  padding: 10px;
+  text-align: center;
+}
+
+#epoch-control-buttons > svg {
+  cursor: pointer;
+}
