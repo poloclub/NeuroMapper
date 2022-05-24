@@ -56,7 +56,6 @@ export const EpochControl = observer(
     for (let i = 0; i < constant.layers.length; i++) {
       store.updateCustomEmbData(i);
     }
-  };
 
   return (
     <div id="epoch-control">
