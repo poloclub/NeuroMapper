@@ -1,4 +1,5 @@
 import { observable, makeObservable, action } from "mobx";
+import { ScatterGL, RenderMode } from "scatter-gl";
 import * as constant from "./constant.js";
 
 export class Store {
@@ -166,9 +167,9 @@ export class Store {
         embData[layer][epoch] = {};
 
         // File paths
-        let dirPath = [constant.embDir, layer].join("/");
-        let embFileName = `${dirPath}/${epoch}_embedding.csv`;
-        let labelFileName = `${dirPath}/${epoch}_labels.csv`;
+        let dirPath = [constant.embDir, layer + '_pre_embeded'].join("/");
+        let embFileName = `${dirPath}/${epoch}_embedding.csv`
+        let labelFileName = `${dirPath}/${epoch}_labels.csv`
 
         // Load embedding and label data
         fetch(embFileName)
@@ -201,6 +202,92 @@ export class Store {
           });
       }
     }
+    // console.log(embData)
+  }
+
+  loadCustomEmbData(index, nNeighbors, minDists) {
+    let tempData = {};
+
+    let promises = []
+    let layer = constant.layers[index]
+
+    for (let epoch of constant.epochs) {
+      // Initialize embData
+      tempData[epoch] = {};
+
+      let customFilePath = [layer, '_pre_embeded',`_(${nNeighbors}, ${minDists})`].join("")
+      // File paths
+      let dirPath = [constant.embDir, customFilePath].join("/");
+      let embFileName = `${dirPath}/${epoch}_embedding.csv`;
+      let labelFileName = `${dirPath}/${epoch}_labels.csv`;
+  
+      // Load embedding and label data
+      promises.push(
+      fetch(embFileName)
+        .then((res) => res.text())
+        .then((data) => {
+          data = data
+            .split("\n")
+            .map((coord) => coord.split(",").map((v) => parseFloat(v)))
+            .slice(0, -1);
+          tempData[epoch]["emb"] = data;
+
+          // Load label data
+          fetch(labelFileName)
+            .then((res) => res.text())
+            .then((labelData) => {
+              labelData = labelData
+                .split("\n")
+                .map((label) => parseFloat(label))
+                .slice(0, -1);
+              tempData[epoch]["label"] = labelData;
+
+              if (
+                this.isLast(epoch, constant.epochs)
+              ) {
+                let fstEpoch = constant.epochs[0];
+                let numEmbPoints = tempData[fstEpoch]["emb"].length;
+                let parsedEmbData = Array(numEmbPoints);
+                for (let i = 0; i < numEmbPoints; i++) {
+                  parsedEmbData[i] = {
+                    emb: {},
+                    label: tempData[fstEpoch]["label"][i],
+                  };
+                  for (let epoch of constant.epochs) {
+                    parsedEmbData[i]["emb"][epoch] =
+                      tempData[epoch]["emb"][i];
+                  }
+                }
+                this.embData[layer] = parsedEmbData
+                this.setLoadingEmbDone(true);
+                this.updateCustomEmbData(index)
+              }
+            });
+        })
+      )
+    }
+    
+  }
+
+  updateCustomEmbData(i) {
+      let layer = constant.layers[i];
+      let points = this.embData[layer];
+      let epoch = this.epoch;
+      const labels = points.map((point) => point["label"]);
+      const datapoints = points.map((point) => point["emb"][epoch]);
+      const metadata = [];
+      labels.forEach((element) => {
+        metadata.push({
+          labelIndex: element,
+          label: constant.cifar_10_classes[element],
+        });
+      });
+      const dataset = new ScatterGL.Dataset(datapoints, metadata);
+      dataset.setSpriteMetadata({
+        spriteImage: "spritesheet.png",
+        singleSpriteSize: [32, 32],
+      });
+      this.plots[i].updateDataset(dataset);
   }
 
   getLast(arr) {
