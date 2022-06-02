@@ -8,17 +8,17 @@
 
 .scatter-gl-container-layer {
   justify-content:center;
-  width: 400px;
-  height: 400px;
+  width: 100%;
+  height: 50%;
 }
 
 .scatter-gl-wrapper-layer {
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 5%;
+  margin-right: 5%;
 }
 
 .scatter-gl-layer-label {
-  margin-top: -400px;
+  margin-top: -70%;
   font-size: large;
   padding-left: 10px;
   padding-top: 5px;
@@ -38,7 +38,7 @@
 }
 
 .hyperparameter-menu{
-  width: 400px;
+  width: 100%;
   /* height: 200px; */
   background-color: #1C3543;
 }
