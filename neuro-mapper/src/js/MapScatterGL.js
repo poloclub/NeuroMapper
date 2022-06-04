@@ -5,6 +5,9 @@ import * as constant from "./constant.js";
 import { ScatterGL } from "scatter-gl";
 import { EpochControl } from "./EpochControl.js";
 import { HyperparameterMenu } from "./HyperparameterMenu"
+import { Button, IconButton } from "@mui/material";
+import RotateLeftIcon from '@mui/icons-material/RotateLeft';
+import RotateRightIcon from '@mui/icons-material/RotateRight';
 
 export const MapScatterGL = observer(({ store }) => {
   let numLayers = constant.layers.length;
@@ -117,6 +120,20 @@ export const MapScatterGL = observer(({ store }) => {
                 </div>
                 <div className={`scatter-gl-layer-label`}>
                   Layer {i + 1}
+                </div>
+                <div className='scatter-gl-rotate'> 
+                  <IconButton onClick={() => {
+                    constant.rotationAmount[i] = (constant.rotationAmount[i] + 1) % 12
+                    store.updateCustomEmbData(i);
+                  }}>
+                    <RotateLeftIcon />
+                  </IconButton>
+                  <IconButton onClick={() => {
+                    constant.rotationAmount[i] = (constant.rotationAmount[i] - 1) % 12
+                    store.updateCustomEmbData(i);
+                  }}>
+                    <RotateRightIcon />
+                  </IconButton>
                 </div>
               </div>
             )

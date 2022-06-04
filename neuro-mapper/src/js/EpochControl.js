@@ -10,24 +10,7 @@ export const EpochControl = observer(({ store }) => {
     store.setEpoch(epoch);
 
     for (let i = 0; i < constant.layers.length; i++) {
-      let layer = constant.layers[i];
-      let points = store.embData[layer];
-      let epoch = store.epoch;
-      const labels = points.map((point) => point["label"]);
-      const datapoints = points.map((point) => point["emb"][epoch]);
-      const metadata = [];
-      labels.forEach((element) => {
-        metadata.push({
-          labelIndex: element,
-          label: constant.cifar_10_classes[element],
-        });
-      });
-      const dataset = new ScatterGL.Dataset(datapoints, metadata);
-      dataset.setSpriteMetadata({
-        spriteImage: "spritesheet.png",
-        singleSpriteSize: [32, 32],
-      });
-      store.plots[i].updateDataset(dataset);
+      store.updateCustomEmbData(i);
     }
   };
 
