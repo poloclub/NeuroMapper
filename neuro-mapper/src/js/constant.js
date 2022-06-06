@@ -1,3 +1,4 @@
+export const neighborDataPath = "./data/neighbor-data.json"
 export const embDir = "./data/embedding";
 export const layers = [...Array(4).keys()].map((i) => `layer${i + 1}`);
 export const epochs = [...Array(39).keys()].map((x) => 5 + x * 5);

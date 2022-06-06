@@ -82,6 +82,9 @@ export const MapScatterGL = observer(({ store }) => {
           store.plots[i].setHoverPointIndex(point);
         }
       },
+      onClick: (point) => {
+        store.setClickedImageIndex(point);
+      }
     });
 
     scatterGL.render(dataset);

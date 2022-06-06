@@ -42,6 +42,15 @@ export class Store {
   }
 
   /**
+   * Neighbor data
+   */
+  
+  neighborData = {};
+  setNeighborData(neighborData) {
+    this.neighborData = neighborData;
+  }
+
+  /**
    * Selected layer
    */
 
@@ -57,6 +66,11 @@ export class Store {
   hoverImageIndex = null;
   setHoverImageIndex(hoverImageIndex) {
     this.hoverImageIndex = hoverImageIndex;
+  }
+
+  clickedImageIndex = null;
+  setClickedImageIndex(clickedImageIndex) {
+    this.clickedImageIndex = clickedImageIndex
   }
 
   /**
@@ -120,6 +134,8 @@ export class Store {
       setEmbData: action,
       embRange: observable,
       setEmbRange: action,
+      neighborData: observable,
+      setNeighborData: action,
       xScale: observable,
       setXScale: action,
       yScale: observable,
@@ -128,6 +144,8 @@ export class Store {
       setSelectedLayerIdx: action,
       hoverImageIndex: observable,
       setHoverImageIndex: action,
+      clickedImageIndex: observable,
+      setClickedImageIndex: action,
       plots: observable,
       setPlots: action,
       setPlotsIndex: action,
@@ -154,6 +172,7 @@ export class Store {
 
   loadAllData() {
     this.loadEmbData();
+    this.loadNeighborData();
   }
 
   loadEmbData() {
@@ -202,7 +221,6 @@ export class Store {
           });
       }
     }
-    // console.log(embData)
   }
 
   loadCustomEmbData(index, nNeighbors, minDists) {
@@ -266,7 +284,6 @@ export class Store {
         })
       )
     }
-    
   }
 
   updateCustomEmbData(i) {
@@ -317,6 +334,15 @@ export class Store {
     }
     this.setEmbData(parsedEmbData);
     this.setEmbRange(this.getMinMaxCoord());
+  }
+
+  loadNeighborData() {
+    // fetch(constant.neighborDataPath)
+    //   .then((res) => res.text())
+    //   .then((data) => JSON.parse(data))
+    //   .then((parsedData) => {
+    //     this.setNeighborData(parsedData)
+    //   })
   }
 
   /**
