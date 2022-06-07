@@ -33,3 +33,5 @@ export const cifar_10_classes = ['plane', 'car', 'bird', 'cat', 'deer', 'dog', '
 export const defaultNNeighbors = [20, 20, 20, 20]
 export const defaultMinDist = [0.1, 0.1, 0.1, 0.1]
 export const defaultSampleSize = [10000, 10000, 10000, 10000]
+
+export const rotationAmount = [0, 0, 0, 0]

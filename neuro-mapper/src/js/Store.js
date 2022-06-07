@@ -1,6 +1,9 @@
 import { observable, makeObservable, action } from "mobx";
 import { ScatterGL, RenderMode } from "scatter-gl";
 import * as constant from "./constant.js";
+import { create, all } from 'mathjs'
+
+const math = create(all, {})
 
 export class Store {
   /**
@@ -274,7 +277,7 @@ export class Store {
       let points = this.embData[layer];
       let epoch = this.epoch;
       const labels = points.map((point) => point["label"]);
-      const datapoints = points.map((point) => point["emb"][epoch]);
+      const datapoints = points.map((point) => math.rotate(point["emb"][epoch], math.pi/6 * constant.rotationAmount[i]));
       const metadata = [];
       labels.forEach((element) => {
         metadata.push({
