@@ -277,7 +277,11 @@ export class Store {
       let points = this.embData[layer];
       let epoch = this.epoch;
       const labels = points.map((point) => point["label"]);
-      const datapoints = points.map((point) => math.rotate(point["emb"][epoch], math.pi/6 * constant.rotationAmount[i]));
+      const datapoints = points.map((point) => {
+        let temp = math.rotate(point["emb"][epoch], math.pi/6 * constant.rotationAmount[i])
+        temp[0] = temp[0] * constant.flipAmount[i]
+        return temp
+      });
       const metadata = [];
       labels.forEach((element) => {
         metadata.push({

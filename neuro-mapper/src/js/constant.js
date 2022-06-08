@@ -35,3 +35,4 @@ export const defaultMinDist = [0.1, 0.1, 0.1, 0.1]
 export const defaultSampleSize = [10000, 10000, 10000, 10000]
 
 export const rotationAmount = [0, 0, 0, 0]
+export const flipAmount = [1, 1, 1, 1]
