@@ -23,12 +23,7 @@
   font-size: large;
   padding-left: 10px;
   padding-top: 5px;
-}
-
-.scatter-gl-rotate {
   position: absolute;
-  bottom: 50px;
-  right: 0;
 }
 
 #epoch-val {
@@ -40,13 +35,6 @@
   display:grid;
   grid-template-columns: 25% 25% 25% 25%;
   grid-template-rows: 100%;
-  height: 80%;
-  min-height: 80vh;
+  height: 70%;
+  min-height: 70vh;
 }
-
-.hyperparameter-menu{
-  width: 400px;
-  /* height: 200px; */
-  background-color: #1C3543;
-}
-

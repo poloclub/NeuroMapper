@@ -1,3 +1,30 @@
+.hyperparameter-menu {
+    width: 400px;
+    /* height: 200px; */
+    /* background-color: #35617b; */
+  }
+   
+.hyperparameter-display {
+    display: flex;
+    font-family: 'Roboto';
+    font-style: normal;
+    line-height: 16px;
+}
+
+.hp-item {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.hp-label {
+    padding-top: 10px;
+}
+
+.hp-value {
+    font-weight: 700;
+    font-size: x-large;
+}
+
 .hp-text {
     font-family: 'Roboto';
     font-style: normal;
@@ -11,11 +38,19 @@
 }
 
 .hp-slider {
-    margin-left: 20px;
-    margin-right: 20px;
+    width: 300px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    padding-right: 10px;
 }
 
 .hp-button {
     margin-left: 20px;
     padding-bottom: 20px;
+    float: left;
 }
+
+.scatter-gl-rotate {
+    float: right;
+    padding-right: 15px;
+  }
