@@ -144,10 +144,10 @@ export const HyperparameterMenu = observer(
                 <div className="hp-button">
                     <Button
                         onClick={() => {
-                            store.loadCustomEmbData(index, store.nNeighbors[index], store.minDists[index])
                             store.setNNeighbors(index, curNNeighbors)
                             store.setMinDists(index, curMinDist)
                             store.setSampleSize(index, curSampleSize)
+                            store.loadCustomEmbData(index, curNNeighbors, curMinDist)
                         }}
                         disabled={curNNeighbors === store.nNeighbors[index] 
                             && curMinDist === store.minDists[index] 
