@@ -5,10 +5,6 @@ import * as constant from "./constant.js";
 import { ScatterGL } from "scatter-gl";
 import { EpochControl } from "./EpochControl.js";
 import { HyperparameterMenu } from "./HyperparameterMenu"
-import { IconButton } from "@mui/material";
-import RotateLeftIcon from '@mui/icons-material/RotateLeft';
-import RotateRightIcon from '@mui/icons-material/RotateRight';
-import FlipIcon from '@mui/icons-material/Flip';
 
 export const MapScatterGL = observer(({ store }) => {
   let numLayers = constant.layers.length;
@@ -116,34 +112,13 @@ export const MapScatterGL = observer(({ store }) => {
             let curr_scattergl_id = `scatter-gl-container-layer${i}`
             return (
               <div id={curr_id} className='scatter-gl-wrapper-layer'> 
-                <HyperparameterMenu store={store} index={i}/>
                 <div id={curr_scattergl_id} className={`scatter-gl-container-layer`}>
                 </div>
                 <div className={`scatter-gl-layer-label`}>
                   Layer {i + 1}
                 </div>
-                <div className='scatter-gl-rotate'> 
-                  <IconButton onClick={() => {
-                    let amount = constant.flipAmount[i] === 1 ? 1 : -1
-                    constant.rotationAmount[i] = (constant.rotationAmount[i] + amount) % 12
-                    store.updateCustomEmbData(i);
-                  }}>
-                    <RotateLeftIcon />
-                  </IconButton>
-                  <IconButton onClick={() => {
-                    let amount = constant.flipAmount[i] === 1 ? -1 : 1
-                    constant.rotationAmount[i] = (constant.rotationAmount[i] + amount) % 12
-                    store.updateCustomEmbData(i);
-                  }}>
-                    <RotateRightIcon />
-                  </IconButton>
-                  <IconButton onClick={() => {
-                    constant.flipAmount[i] = constant.flipAmount[i] * -1
-                    store.updateCustomEmbData(i);
-                  }}>
-                    <FlipIcon />
-                  </IconButton>
-                </div>
+
+              <HyperparameterMenu store={store} index={i}/>
               </div>
             )
           })}
