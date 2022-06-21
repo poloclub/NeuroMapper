@@ -115,7 +115,7 @@ export const MapScatterGL = observer(({ store }) => {
                 <div id={curr_scattergl_id} className={`scatter-gl-container-layer`}>
                 </div>
                 <div className={`scatter-gl-layer-label`}>
-                  Layer {i + 1}
+                  Residual Block {i + 1} Output
                 </div>
 
               <HyperparameterMenu store={store} index={i}/>
