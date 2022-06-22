@@ -56,7 +56,7 @@ export const HyperparameterMenu = observer(
         }
 
         let handleSampleSizeSliderChange = (e, val) => {
-            // setCurSampleSize(val)
+            setCurSampleSize(val)
         }
 
         return (
@@ -112,33 +112,6 @@ export const HyperparameterMenu = observer(
                                 marks={[{value: 0.1}, {value: 0.4}, {value: 0.7}, {value: 0.99}]}
                                 onChange={handleMinDistsSliderChange}
                             />
-                            </div>
-                            
-                        </Popover>
-                    </div>
-                    <div id="md-text" className="hp-item">
-                        <div className="hp-label">Sample Size</div>
-                        <Button onClick={handleClickSampleSize}>
-                            <div className="hp-value">{curSampleSize}</div>
-                        </Button>
-                        <Popover
-                            anchorEl={anchorElSampleSize}
-                            onClose={handleCloseSampleSize}
-                            open={Boolean(anchorElSampleSize)}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            }}
-                        >
-                            <div className="hp-slider">
-                            <Slider
-                            defaultValue={constant.defaultSampleSize}
-                            value={curSampleSize}
-                            min={0}
-                            max={10000}
-                            step={500}
-                            onChange={handleSampleSizeSliderChange}
-                        />
                             </div>
                             
                         </Popover>

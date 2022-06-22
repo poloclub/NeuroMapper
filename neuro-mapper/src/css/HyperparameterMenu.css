@@ -18,11 +18,12 @@
 
 .hp-label {
     padding-top: 10px;
+    font-size: x-large;
 }
 
 .hp-value {
     font-weight: 700;
-    font-size: x-large;
+    font-size: xx-large;
 }
 
 .hp-text {
