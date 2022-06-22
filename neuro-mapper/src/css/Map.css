@@ -15,6 +15,13 @@
 .scatter-gl-wrapper-layer {
   margin-left: auto;
   margin-right: auto;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.scatter-gl-wrapper-layer:not(:last-child) {
+  border-right: 2px solid #EDEDED;
+
 }
 
 .scatter-gl-layer {
@@ -46,4 +53,5 @@
   grid-template-rows: 100%;
   height: 70%;
   min-height: 70vh;
+  display: flex;
 }
