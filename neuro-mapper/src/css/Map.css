@@ -51,7 +51,5 @@
   display:grid;
   grid-template-columns: 25% 25% 25% 25%;
   grid-template-rows: 100%;
-  height: 70%;
-  min-height: 70vh;
   display: flex;
 }

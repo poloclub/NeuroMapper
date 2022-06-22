@@ -44,11 +44,20 @@ export const HyperparameterMenu = observer(
         const [curSampleSize, setCurSampleSize] = useState(constant.defaultSampleSize);
 
         let handleNNeighborsSliderChange = (e, val) => {
-            setCurNNeighbors(val)
+            if (val !== curNNeighbors) {
+                setCurNNeighbors(val)
+                store.setNNeighbors(index, val)
+                store.loadCustomEmbData(index, val, curMinDist, curSampleSize)
+
+            }
         }
 
         let handleMinDistsSliderChange = (e, val) => {
-            setCurMinDist(val)
+            if (val !== curMinDist) {
+                setCurMinDist(val)
+                store.setMinDists(index, val)
+                store.loadCustomEmbData(index, curNNeighbors, val, curSampleSize)
+            }
         }
 
         let handleSampleSizeSliderChange = (e, val) => {
@@ -111,22 +120,6 @@ export const HyperparameterMenu = observer(
                             </div>
                         </Popover>
                     </div>
-                </div>
-                <div className="hp-button">
-                    <Button
-                        onClick={() => {
-                            store.setNNeighbors(index, curNNeighbors)
-                            store.setMinDists(index, curMinDist)
-                            store.setSampleSize(curSampleSize)
-                            store.loadCustomEmbData(index, curNNeighbors, curMinDist, curSampleSize)
-                        }}
-                        disabled={curNNeighbors === store.nNeighbors[index] 
-                            && curMinDist === store.minDists[index] 
-                            && curSampleSize === store.sampleSize}
-                        variant={"contained"}
-                    >
-                        Apply Params
-                    </Button>
                 </div>
             </div>
         )
