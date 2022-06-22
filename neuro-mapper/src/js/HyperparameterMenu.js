@@ -45,7 +45,7 @@ export const HyperparameterMenu = observer(
 
         const [curNNeighbors, setCurNNeighbors] = useState(constant.defaultNNeighbors[index]);
         const [curMinDist, setCurMinDist] = useState(constant.defaultMinDist[index]);
-        const [curSampleSize, setCurSampleSize] = useState(constant.defaultSampleSize[index]);
+        const [curSampleSize, setCurSampleSize] = useState(constant.defaultSampleSize);
 
         let handleNNeighborsSliderChange = (e, val) => {
             setCurNNeighbors(val)
@@ -63,9 +63,9 @@ export const HyperparameterMenu = observer(
             <div className="hyperparameter-menu">
                 <div className="hyperparameter-display">
                     <div id="nn-text" className="hp-item">
-                        <div class="hp-label">N-Neighbors</div>
+                        <div className="hp-label">N-Neighbors</div>
                         <Button onClick={handleClickNNeighbors}>
-                            <div class="hp-value">{curNNeighbors}</div>
+                            <div className="hp-value">{curNNeighbors}</div>
                         </Button>
                         <Popover
                             anchorEl={anchorElNNeighbors}
@@ -76,9 +76,10 @@ export const HyperparameterMenu = observer(
                                 horizontal: 'left',
                             }}
                         >
-                            <div class="hp-slider">
+                            <div className="hp-slider">
                                 <Slider
                                     defaultValue={constant.defaultNNeighbors[index]}
+                                    value={curNNeighbors}
                                     step={null}
                                     marks={[{value: 5}, {value: 20}, {value: 100}]}
                                     onChange={handleNNeighborsSliderChange} 
@@ -88,9 +89,9 @@ export const HyperparameterMenu = observer(
                         </Popover>
                     </div>
                     <div id="md-text" className="hp-item">
-                        <div class="hp-label">Min Distance</div>
+                        <div className="hp-label">Min Distance</div>
                         <Button onClick={handleClickMinDist}>
-                            <div class="hp-value">{curMinDist}</div>
+                            <div className="hp-value">{curMinDist}</div>
                         </Button>
                         <Popover
                             anchorEl={anchorElMinDist}
@@ -101,41 +102,16 @@ export const HyperparameterMenu = observer(
                                 horizontal: 'left',
                             }}
                         >
-                            <div class="hp-slider">
+                            <div className="hp-slider">
                             <Slider
                                 defaultValue={constant.defaultMinDist[index]}
+                                value={curMinDist}
                                 min={0}
                                 max={1}
                                 step={null}
-                                marks={[{value: 0.1}, {value: 0.5}]}
+                                marks={[{value: 0.1}, {value: 0.4}, {value: 0.7}, {value: 0.99}]}
                                 onChange={handleMinDistsSliderChange}
                             />
-                            </div>
-                            
-                        </Popover>
-                    </div>
-                    <div id="md-text" className="hp-item">
-                        <div class="hp-label">Sample Size</div>
-                        <Button onClick={handleClickSampleSize}>
-                            <div class="hp-value">{curSampleSize}</div>
-                        </Button>
-                        <Popover
-                            anchorEl={anchorElSampleSize}
-                            onClose={handleCloseSampleSize}
-                            open={Boolean(anchorElSampleSize)}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            }}
-                        >
-                            <div class="hp-slider">
-                            <Slider
-                            defaultValue={constant.defaultSampleSize[index]}
-                            min={0}
-                            max={10000}
-                            step={2000}
-                            onChange={handleSampleSizeSliderChange}
-                        />
                             </div>
                             
                         </Popover>
@@ -146,15 +122,15 @@ export const HyperparameterMenu = observer(
                         onClick={() => {
                             store.setNNeighbors(index, curNNeighbors)
                             store.setMinDists(index, curMinDist)
-                            store.setSampleSize(index, curSampleSize)
-                            store.loadCustomEmbData(index, curNNeighbors, curMinDist)
+                            store.setSampleSize(curSampleSize)
+                            store.loadCustomEmbData(index, curNNeighbors, curMinDist, curSampleSize)
                         }}
                         disabled={curNNeighbors === store.nNeighbors[index] 
                             && curMinDist === store.minDists[index] 
-                            && curSampleSize === store.sampleSize[index]}
+                            && curSampleSize === store.sampleSize}
                         variant={"contained"}
                     >
-                        Apply Parameters
+                        Apply Params
                     </Button>
                 </div>
                 <div className='scatter-gl-rotate'> 

@@ -19,10 +19,12 @@
 
 .scatter-gl-layer-label {
   margin-top: -400px;
-  font-size: large;
+  font-size: x-large;
   padding-left: 10px;
   padding-top: 5px;
   position: absolute;
+  font-weight: bold;
+  color: grey;
 }
 
 #epoch-val {
