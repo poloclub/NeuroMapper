@@ -3,10 +3,6 @@ import { Button, Slider } from "@mui/material";
 import * as constant from "./constant.js";
 import { useState } from "react";
 import Popover from "@mui/material/Popover";
-import { IconButton } from "@mui/material";
-import RotateLeftIcon from '@mui/icons-material/RotateLeft';
-import RotateRightIcon from '@mui/icons-material/RotateRight';
-import FlipIcon from '@mui/icons-material/Flip';
 
 export const HyperparameterMenu = observer(
     ({
@@ -113,7 +109,6 @@ export const HyperparameterMenu = observer(
                                 onChange={handleMinDistsSliderChange}
                             />
                             </div>
-                            
                         </Popover>
                     </div>
                 </div>
@@ -132,28 +127,6 @@ export const HyperparameterMenu = observer(
                     >
                         Apply Params
                     </Button>
-                </div>
-                <div className='scatter-gl-rotate'> 
-                    <IconButton onClick={() => {
-                        let amount = constant.flipAmount[index] === 1 ? 1 : -1
-                        constant.rotationAmount[index] = (constant.rotationAmount[index] + amount) % 12
-                        store.updateCustomEmbData(index);
-                    }}>
-                        <RotateLeftIcon />
-                    </IconButton>
-                    <IconButton onClick={() => {
-                        let amount = constant.flipAmount[index] === 1 ? -1 : 1
-                        constant.rotationAmount[index] = (constant.rotationAmount[index] + amount) % 12
-                        store.updateCustomEmbData(index);
-                    }}>
-                        <RotateRightIcon />
-                    </IconButton>
-                    <IconButton onClick={() => {
-                        constant.flipAmount[index] = constant.flipAmount[index] * -1
-                        store.updateCustomEmbData(index);
-                    }}>
-                        <FlipIcon />
-                    </IconButton>
                 </div>
             </div>
         )

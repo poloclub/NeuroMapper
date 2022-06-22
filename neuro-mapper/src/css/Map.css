@@ -17,14 +17,22 @@
   margin-right: auto;
 }
 
-.scatter-gl-layer-label {
-  margin-top: -400px;
-  font-size: x-large;
+.scatter-gl-layer {
   padding-left: 10px;
   padding-top: 5px;
-  position: absolute;
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+.scatter-gl-layer-label {
+  font-size: x-large;
   color: grey;
+  font-weight: bold;
+}
+
+.scatter-gl-layer-rotate {
+  margin-left: auto;
+  padding-top: 2px;
 }
 
 #epoch-val {
