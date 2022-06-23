@@ -1,14 +1,14 @@
 /* Add a black background color to the top navigation */
 .topnav {
-  background-color: #1C3543;
+  background-color: #EEEEEE;
   overflow: hidden;
-  height: 50px;
+  height: 150px;
 }
 
 .logo-text {
-  float: right;
-  padding: 5px 0;
-  font-size: 30px;
-  margin-right: 20px;
-  color: white;
+  font-size: 60px;
+  color: #000000;
+  float: left;
+  margin-top: 30px;
+  margin-left: 30px
 }
