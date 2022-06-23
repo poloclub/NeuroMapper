@@ -19,10 +19,10 @@ export const MapScatterGL = observer(({ store }) => {
         let layer = constant.layers[i];
         let points = store.embData[layer];
         let curr_selector = `#scatter-gl-container-layer${i}`;
-        renderScatterGL(points, curr_selector);
+        // renderScatterGL(points, curr_selector);
       }
     }
-    fixScatterGLLabel();
+    // fixScatterGLLabel();
   }, [store.loadingEmbDone]);
 
   const fixScatterGLLabel = () => {
