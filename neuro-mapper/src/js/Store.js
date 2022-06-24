@@ -105,8 +105,13 @@ export class Store {
   }
 
   sampleSize = constant.defaultSampleSize
-  setSampleSize(index, value) {
-    this.sampleSize[index] = value
+  setSampleSize(value) {
+    this.sampleSize = value
+  }
+
+  sampleIndices = constant.defaultSampleIndices
+  setSampleIndices(sampleIndices) {
+    this.sampleIndices = sampleIndices
   }
 
   showLabels = constant.cifar_10_classes
@@ -152,6 +157,8 @@ export class Store {
       setSampleSize: action,
       showLabels: observable,
       setShowLabels: action,
+      sampleIndices: observable,
+      setSampleIndices: action,
     })
 
     // Load data
@@ -168,7 +175,8 @@ export class Store {
 
   loadEmbData() {
     let embData = {};
-    for (let layer of constant.layers) {
+    for (let i = 0; i < constant.layers.length; i++) {
+      let layer = constant.layers[i]
       // Initialize embData
       embData[layer] = {};
 
@@ -177,7 +185,8 @@ export class Store {
         embData[layer][epoch] = {};
 
         // File paths
-        let dirPath = [constant.embDir, layer + '_pre_embeded'].join("/");
+        let customFilePath = [layer, '_pre_embeded',`_(${constant.defaultNNeighbors[i]}, ${constant.defaultMinDist[i]})`].join("")
+        let dirPath = [constant.embDir, customFilePath].join("/");
         let embFileName = `${dirPath}/${epoch}_embedding.csv`
         let labelFileName = `${dirPath}/${epoch}_labels.csv`
 
@@ -212,10 +221,20 @@ export class Store {
           });
       }
     }
-    // console.log(embData)
   }
 
-  loadCustomEmbData(index, nNeighbors, minDists) {
+  shuffle(array) {
+    var tmp, current, top = array.length;
+    if(top) while(--top) {
+      current = Math.floor(Math.random() * (top + 1));
+      tmp = array[current];
+      array[current] = array[top];
+      array[top] = tmp;
+    }
+    return array;
+  }
+
+  loadCustomEmbData(index, nNeighbors, minDists, curSampleSize) {
     let tempData = {};
 
     let promises = []
@@ -268,6 +287,9 @@ export class Store {
                       tempData[epoch]["emb"][i];
                   }
                 }
+
+                let newSampleIndices = Array.from(Array(curSampleSize).keys());
+                this.setSampleIndices(newSampleIndices)
                 this.embData[layer] = parsedEmbData
                 this.setLoadingEmbDone(true);
                 this.updateCustomEmbData(index)
@@ -284,23 +306,28 @@ export class Store {
       let points = this.embData[layer];
       let epoch = this.epoch;
       const labels = points.map((point) => point["label"]);
-      const datapoints = points.map((point) => {
+      
+      const datapoints = this.sampleIndices.map((index) => {
+        const point = points[index]
         let temp = math.rotate(point["emb"][epoch], math.pi/6 * constant.rotationAmount[i])
         temp[0] = temp[0] * constant.flipAmount[i]
         return temp
-      });
+      })
+      
       const metadata = [];
-      labels.forEach((element) => {
+      this.sampleIndices.forEach((index) => {
+        const element = labels[index]
         metadata.push({
           labelIndex: element,
           label: constant.cifar_10_classes[element],
         });
-      });
+      })
+
       const dataset = new ScatterGL.Dataset(datapoints, metadata);
-      dataset.setSpriteMetadata({
-        spriteImage: "spritesheet.png",
-        singleSpriteSize: [32, 32],
-      });
+      // dataset.setSpriteMetadata({
+      //   spriteImage: "spritesheet.png",
+      //   singleSpriteSize: [32, 32],
+      // });
       this.plots[i].updateDataset(dataset);
   }
 

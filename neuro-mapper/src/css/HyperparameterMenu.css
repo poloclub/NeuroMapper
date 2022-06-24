@@ -18,11 +18,12 @@
 
 .hp-label {
     padding-top: 10px;
+    font-size: x-large;
 }
 
 .hp-value {
     font-weight: 700;
-    font-size: x-large;
+    font-size: xx-large;
 }
 
 .hp-text {
@@ -45,13 +46,3 @@
     padding-left: 15px;
 }
 
-.hp-button {
-    margin-left: 20px;
-    padding-bottom: 20px;
-    float: left;
-}
-
-.scatter-gl-rotate {
-    float: right;
-    padding-right: 15px;
-  }

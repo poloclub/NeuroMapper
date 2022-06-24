@@ -15,14 +15,31 @@
 .scatter-gl-wrapper-layer {
   margin-left: auto;
   margin-right: auto;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.scatter-gl-wrapper-layer:not(:last-child) {
+  border-right: 2px solid #EDEDED;
+
+}
+
+.scatter-gl-layer {
+  padding-left: 10px;
+  padding-top: 5px;
+  display: flex;
+  align-items: center;
 }
 
 .scatter-gl-layer-label {
-  margin-top: -400px;
-  font-size: large;
-  padding-left: 10px;
-  padding-top: 5px;
-  position: absolute;
+  font-size: x-large;
+  color: grey;
+  font-weight: bold;
+}
+
+.scatter-gl-layer-rotate {
+  margin-left: auto;
+  padding-top: 2px;
 }
 
 #epoch-val {
@@ -34,6 +51,5 @@
   display:grid;
   grid-template-columns: 25% 25% 25% 25%;
   grid-template-rows: 100%;
-  height: 70%;
-  min-height: 70vh;
+  display: flex;
 }
