@@ -200,7 +200,6 @@ export class Store {
               .map((coord) => coord.split(",").map((v) => parseFloat(v)))
               .slice(0, -1);
             embData[layer][epoch]["emb"] = data;
-
             // Load label data
             fetch(labelFileName)
               .then((res) => res.text())

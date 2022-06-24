@@ -6,6 +6,8 @@ export const NavBar = observer(({ store }) => {
     <div className="logo-text">
       <b>NeuroMapper</b>
     </div>
-    <LabelMenu />
+    <div className="class-menu">
+      <LabelMenu store={store} />
+    </div>
   </div>;
 });
