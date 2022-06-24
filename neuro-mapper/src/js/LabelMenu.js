@@ -24,7 +24,7 @@ const MenuProps = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: '40%',
+      width: '20%',
     },
   },
 };
@@ -183,7 +183,7 @@ export const LabelMenu = observer(
                           var class_index = constant.cifar_10_classes.indexOf(value)
                           var class_color = constant.embColors[class_index]
                           return (
-                          <Chip key={value} label={value} style={{backgroundColor:'#D3D3D3', border:`4px solid ${class_color}`}}/>
+                          <Chip key={value} label={value} style={{backgroundColor:'#E0E0E0', border:`4px solid ${class_color}`}}/>
                           )
                         })}
                       </Box>
