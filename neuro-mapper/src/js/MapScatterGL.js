@@ -5,6 +5,7 @@ import * as constant from "./constant.js";
 import { ScatterGL } from "scatter-gl";
 import { EpochControl } from "./EpochControl.js";
 import { HyperparameterMenu } from "./HyperparameterMenu"
+import { LabelMenu } from "./LabelMenu.js";
 
 import { IconButton } from "@mui/material";
 import RotateRightIcon from '@mui/icons-material/RotateRight';
@@ -56,6 +57,7 @@ export const MapScatterGL = observer(({ store }) => {
     let epoch = store.epoch;
     const labels = points.map((point) => point["label"]);
     const datapoints = points.map((point) => point["emb"][epoch]);
+
     const metadata = [];
     labels.forEach((element) => {
       metadata.push({
@@ -65,7 +67,6 @@ export const MapScatterGL = observer(({ store }) => {
     });
 
     const dataset = new ScatterGL.Dataset(datapoints, metadata);
-
     dataset.setSpriteMetadata({
       spriteImage: "spritesheet.png",
       singleSpriteSize: [32, 32],
@@ -110,6 +111,9 @@ export const MapScatterGL = observer(({ store }) => {
 
   return (
     <div id="map-wrap">
+      <div className="label-menu">
+        <LabelMenu store={store}/>
+      </div>
       <div id="map-contents">
         {constant.layers.map((layer, i) => {
             let curr_id = `scatter-gl-wrapper-layer${i}`

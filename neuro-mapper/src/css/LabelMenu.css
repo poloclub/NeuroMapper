@@ -1,0 +1,9 @@
+.label-menu {
+  justify-content: center;
+  display: flex;
+}
+
+.class-label {
+  display: inline;
+  padding: 0px 20px;
+}
