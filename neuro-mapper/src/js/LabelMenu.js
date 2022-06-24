@@ -24,7 +24,7 @@ const MenuProps = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: '100%',
+      width: '40%',
     },
   },
 };
@@ -160,7 +160,7 @@ export const LabelMenu = observer(
         return (
               <div>
                 <FormControl variant="outlined"
-                  sx={{ m: 1, width: '90%' }}
+                  sx={{ m: 1, width: '65%' }}
                   classes={{
                     root: classes.quantityRoot
                   }}>
