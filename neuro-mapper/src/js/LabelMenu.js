@@ -179,9 +179,13 @@ export const LabelMenu = observer(
                     input={<OutlinedInput id="np" label="Chip" />}
                     renderValue={(selected) => (
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {selected.map((value) => (
-                          <Chip key={value} label={value} style={{backgroundColor:'#D3D3D3'}}/>
-                        ))}
+                        {selected.map((value) => {
+                          var class_index = constant.cifar_10_classes.indexOf(value)
+                          var class_color = constant.embColors[class_index]
+                          return (
+                          <Chip key={value} label={value} style={{backgroundColor:'#D3D3D3', border:`4px solid ${class_color}`}}/>
+                          )
+                        })}
                       </Box>
                     )}
                     MenuProps={MenuProps}
