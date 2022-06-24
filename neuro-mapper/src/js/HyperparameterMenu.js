@@ -3,10 +3,6 @@ import { Button, Slider } from "@mui/material";
 import * as constant from "./constant.js";
 import { useState } from "react";
 import Popover from "@mui/material/Popover";
-import { IconButton } from "@mui/material";
-import RotateLeftIcon from '@mui/icons-material/RotateLeft';
-import RotateRightIcon from '@mui/icons-material/RotateRight';
-import FlipIcon from '@mui/icons-material/Flip';
 
 export const HyperparameterMenu = observer(
     ({
@@ -48,11 +44,20 @@ export const HyperparameterMenu = observer(
         const [curSampleSize, setCurSampleSize] = useState(constant.defaultSampleSize);
 
         let handleNNeighborsSliderChange = (e, val) => {
-            setCurNNeighbors(val)
+            if (val !== curNNeighbors) {
+                setCurNNeighbors(val)
+                store.setNNeighbors(index, val)
+                store.loadCustomEmbData(index, val, curMinDist, curSampleSize)
+
+            }
         }
 
         let handleMinDistsSliderChange = (e, val) => {
-            setCurMinDist(val)
+            if (val !== curMinDist) {
+                setCurMinDist(val)
+                store.setMinDists(index, val)
+                store.loadCustomEmbData(index, curNNeighbors, val, curSampleSize)
+            }
         }
 
         let handleSampleSizeSliderChange = (e, val) => {
@@ -113,47 +118,8 @@ export const HyperparameterMenu = observer(
                                 onChange={handleMinDistsSliderChange}
                             />
                             </div>
-                            
                         </Popover>
                     </div>
-                </div>
-                <div className="hp-button">
-                    <Button
-                        onClick={() => {
-                            store.setNNeighbors(index, curNNeighbors)
-                            store.setMinDists(index, curMinDist)
-                            store.setSampleSize(curSampleSize)
-                            store.loadCustomEmbData(index, curNNeighbors, curMinDist, curSampleSize)
-                        }}
-                        disabled={curNNeighbors === store.nNeighbors[index] 
-                            && curMinDist === store.minDists[index] 
-                            && curSampleSize === store.sampleSize}
-                        variant={"contained"}
-                    >
-                        Apply Params
-                    </Button>
-                </div>
-                <div className='scatter-gl-rotate'> 
-                    <IconButton onClick={() => {
-                        let amount = constant.flipAmount[index] === 1 ? 1 : -1
-                        constant.rotationAmount[index] = (constant.rotationAmount[index] + amount) % 12
-                        store.updateCustomEmbData(index);
-                    }}>
-                        <RotateLeftIcon />
-                    </IconButton>
-                    <IconButton onClick={() => {
-                        let amount = constant.flipAmount[index] === 1 ? -1 : 1
-                        constant.rotationAmount[index] = (constant.rotationAmount[index] + amount) % 12
-                        store.updateCustomEmbData(index);
-                    }}>
-                        <RotateRightIcon />
-                    </IconButton>
-                    <IconButton onClick={() => {
-                        constant.flipAmount[index] = constant.flipAmount[index] * -1
-                        store.updateCustomEmbData(index);
-                    }}>
-                        <FlipIcon />
-                    </IconButton>
                 </div>
             </div>
         )
