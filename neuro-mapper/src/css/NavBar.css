@@ -1,14 +1,21 @@
 /* Add a black background color to the top navigation */
 .topnav {
-  background-color: #EEEEEE;
-  overflow: hidden;
-  height: 150px;
+  background-color: #E0E0E0;
+  display: flex;
+  width: 100%;
+  align-items: center;
 }
 
 .logo-text {
-  font-size: 60px;
+  padding: 5px 0;
+  font-size: 30px;
+  margin-left: 20px;
   color: #000000;
-  float: left;
-  margin-top: 30px;
-  margin-left: 30px
+  width: 50%;
+}
+
+.class-menu {
+  float: right;
+  width: 50%;
+  color: white;
 }

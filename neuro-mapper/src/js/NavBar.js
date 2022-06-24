@@ -1,11 +1,11 @@
 import { observer } from "mobx-react";
+import { LabelMenu } from "./LabelMenu";
 import Box from '@mui/material/Box';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
 import * as constant from "./constant.js";
-
 
 export const NavBar = observer(({ store }) => {
   const ITEM_HEIGHT = 48;
@@ -26,6 +26,9 @@ export const NavBar = observer(({ store }) => {
   return <div className="topnav">
     <div className="logo-text">
       <b>NeuroMapper</b>
+    </div>
+    <div className="class-menu">
+      <LabelMenu store={store} />
     </div>
   </div>;
 });
