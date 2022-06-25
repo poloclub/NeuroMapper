@@ -309,8 +309,8 @@ export class Store {
     
   }
 
-  updateCustomEmbData(i) {
-    let layer = constant.layers[i]
+  updateCustomEmbData(index) {
+    let layer = constant.layers[index]
     let points = this.embData[layer]
     let epoch = this.epoch
     
@@ -320,7 +320,10 @@ export class Store {
     for (let i = 0; i < points.length; i++) {
       if (this.showLabels.includes(constant.cifar_10_classes[points[i]["label"]]) && sampleIndicesPtr < this.sampleIndices.length && this.sampleIndices[sampleIndicesPtr] == i) {
         labels.push(points[i]["label"])
-        datapoints.push(points[i]["emb"][epoch])
+        let point = points[i]["emb"][epoch]
+        point = math.rotate(point, math.pi/6 * constant.rotationAmount[index])
+        point[0] = point[0] * constant.flipAmount[index]
+        datapoints.push(point)
         sampleIndicesPtr+=1;
       }
     }
@@ -338,8 +341,8 @@ export class Store {
       spriteImage: 'spritesheet.png',
       singleSpriteSize: [32, 32],
     });
-    this.plots[i].updateDataset(dataset)
-    this.plots[i].setPointColorer((i, selectedIndices, hoverIndex) => {
+    this.plots[index].updateDataset(dataset)
+    this.plots[index].setPointColorer((i, selectedIndices, hoverIndex) => {
       const isSelected = selectedIndices.has(i);
       if (hoverIndex === i) {
         return "red";
