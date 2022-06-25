@@ -160,7 +160,7 @@ export const LabelMenu = observer(
         return (
               <div>
                 <FormControl variant="outlined"
-                  sx={{ m: 1, width: '65%' }}
+                  sx={{ m: 1, width: '90%' }}
                   classes={{
                     root: classes.quantityRoot
                   }}>
@@ -183,7 +183,7 @@ export const LabelMenu = observer(
                           var class_index = constant.cifar_10_classes.indexOf(value)
                           var class_color = constant.embColors[class_index]
                           return (
-                          <Chip key={value} label={value} style={{backgroundColor:'#E0E0E0', border:`4px solid ${class_color}`}}/>
+                          <Chip key={value} label={value} style={{backgroundColor:'#E0E0E0', border:`2px solid ${class_color}`}}/>
                           )
                         })}
                       </Box>
