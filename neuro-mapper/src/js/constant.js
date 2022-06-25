@@ -1,6 +1,6 @@
 export const embDir = "./data/embedding";
 export const layers = [...Array(4).keys()].map((i) => `layer${i + 1}`);
-export const epochs = [...Array(39).keys()].map((x) => 5 + x * 5);
+export const epochs = [...Array(40).keys()].map((x) => 5 + x * 5);
 
 export const mapWidth = 200;
 export const mapHeight = 200;
