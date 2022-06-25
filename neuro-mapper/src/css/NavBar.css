@@ -1,6 +1,6 @@
 /* Add a black background color to the top navigation */
 .topnav {
-  background-color: #E0E0E0;
+  background-color: #F3F3F3;
   display: flex;
   width: 100%;
   align-items: center;
@@ -8,22 +8,26 @@
 
 .logo-text {
   padding: 5px 0;
-  font-size: 30px;
+  font-size: 36px;
   margin-left: 20px;
   color: #000000;
   padding-right: 1vw;
 }
 
 .class-menu {
-  float: right;
-  width: 45%;
+  float: left;
   color: white;
+  margin-left: auto;
+}
+
+.epoch {
+  padding-left: 1vw;
 }
 
 .epoch-slider{
   width: 15%;
   margin-left: 20px;
-  padding-right: 1vw;
+  padding-right: 3vw;
 }
 
 #epoch-label{
