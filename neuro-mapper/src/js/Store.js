@@ -239,7 +239,12 @@ export class Store {
     return array;
   }
 
-  loadCustomEmbData(index, nNeighbors, minDists, curSampleSize) {
+  regenerateSample(sampleSize) {
+    let newSampleIndices = this.shuffle(Array.from(Array(constant.defaultSampleSize).keys())).slice(0, sampleSize).sort((a, b) => a - b);
+    this.setSampleIndices(newSampleIndices)
+  }
+
+  loadCustomEmbData(index, nNeighbors, minDists) {
     let tempData = {};
 
     let promises = []
@@ -293,8 +298,6 @@ export class Store {
                   }
                 }
 
-                let newSampleIndices = Array.from(Array(curSampleSize).keys());
-                this.setSampleIndices(newSampleIndices)
                 this.embData[layer] = parsedEmbData
                 this.setLoadingEmbDone(true);
                 this.updateCustomEmbData(index)
@@ -313,10 +316,12 @@ export class Store {
     
     const labels = []
     const datapoints = []
+    let sampleIndicesPtr = 0
     for (let i = 0; i < points.length; i++) {
-      if (this.showLabels.includes(constant.cifar_10_classes[points[i]["label"]])) {
+      if (this.showLabels.includes(constant.cifar_10_classes[points[i]["label"]]) && sampleIndicesPtr < this.sampleIndices.length && this.sampleIndices[sampleIndicesPtr] == i) {
         labels.push(points[i]["label"])
         datapoints.push(points[i]["emb"][epoch])
+        sampleIndicesPtr+=1;
       }
     }
 
@@ -334,6 +339,15 @@ export class Store {
       singleSpriteSize: [32, 32],
     });
     this.plots[i].updateDataset(dataset)
+    this.plots[i].setPointColorer((i, selectedIndices, hoverIndex) => {
+      const isSelected = selectedIndices.has(i);
+      if (hoverIndex === i) {
+        return "red";
+      }
+      return isSelected
+        ? constant.opaqueColorsByLabel[labels[i]]
+        : constant.heavyTransparentColorsByLabel[labels[i]];
+    });
   }
 
   getLast(arr) {

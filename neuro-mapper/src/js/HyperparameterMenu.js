@@ -37,7 +37,7 @@ export const HyperparameterMenu = observer(
             if (val !== curNNeighbors) {
                 setCurNNeighbors(val)
                 store.setNNeighbors(index, val)
-                store.loadCustomEmbData(index, val, curMinDist, curSampleSize)
+                store.loadCustomEmbData(index, val, curMinDist, curSampleSize, false)
 
             }
         }
@@ -46,7 +46,7 @@ export const HyperparameterMenu = observer(
             if (val !== curMinDist) {
                 setCurMinDist(val)
                 store.setMinDists(index, val)
-                store.loadCustomEmbData(index, curNNeighbors, val, curSampleSize)
+                store.loadCustomEmbData(index, curNNeighbors, val, curSampleSize, false)
             }
         }
 
