@@ -119,6 +119,10 @@ export class Store {
     this.showLabels = value
   }
 
+  showLabels = constant.cifar_10_classes
+  setShowLabels(value) {
+    this.showLabels = value
+  }
   /**
    * Constructor of Store
    */
@@ -156,10 +160,10 @@ export class Store {
       setMinDists: action,
       sampleSize: observable,
       setSampleSize: action,
-      sampleIndices: observable,
-      setSampleIndices: action,
       showLabels: observable,
       setShowLabels: action,
+      sampleIndices: observable,
+      setSampleIndices: action,
     })
 
     // Load data
@@ -200,6 +204,7 @@ export class Store {
               .map((coord) => coord.split(",").map((v) => parseFloat(v)))
               .slice(0, -1);
             embData[layer][epoch]["emb"] = data;
+
             // Load label data
             fetch(labelFileName)
               .then((res) => res.text())
@@ -302,33 +307,33 @@ export class Store {
   }
 
   updateCustomEmbData(i) {
-      let layer = constant.layers[i];
-      let points = this.embData[layer];
-      let epoch = this.epoch;
-      const labels = points.map((point) => point["label"]);
-      
-      const datapoints = this.sampleIndices.map((index) => {
-        const point = points[index]
-        let temp = math.rotate(point["emb"][epoch], math.pi/6 * constant.rotationAmount[i])
-        temp[0] = temp[0] * constant.flipAmount[i]
-        return temp
-      })
-      
-      const metadata = [];
-      this.sampleIndices.forEach((index) => {
-        const element = labels[index]
-        metadata.push({
-          labelIndex: element,
-          label: constant.cifar_10_classes[element],
-        });
-      })
+    let layer = constant.layers[i]
+    let points = this.embData[layer]
+    let epoch = this.epoch
+    
+    const labels = []
+    const datapoints = []
+    for (let i = 0; i < points.length; i++) {
+      if (this.showLabels.includes(constant.cifar_10_classes[points[i]["label"]])) {
+        labels.push(points[i]["label"])
+        datapoints.push(points[i]["emb"][epoch])
+      }
+    }
 
-      const dataset = new ScatterGL.Dataset(datapoints, metadata);
-      // dataset.setSpriteMetadata({
-      //   spriteImage: "spritesheet.png",
-      //   singleSpriteSize: [32, 32],
-      // });
-      this.plots[i].updateDataset(dataset);
+    const metadata = [];
+    labels.forEach(element => {
+      metadata.push({
+        labelIndex: element,
+        label: constant.cifar_10_classes[element]
+      })
+    });
+
+    const dataset = new ScatterGL.Dataset(datapoints, metadata);
+    dataset.setSpriteMetadata({
+      spriteImage: 'spritesheet.png',
+      singleSpriteSize: [32, 32],
+    });
+    this.plots[i].updateDataset(dataset)
   }
 
   getLast(arr) {
