@@ -143,7 +143,6 @@ export const MapScatterGL = observer(({ store }) => {
             )
           })}
       </div>
-        <EpochControl store={store}/>
     </div>
   );
 });

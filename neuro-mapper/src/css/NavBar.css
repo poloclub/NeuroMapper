@@ -11,11 +11,24 @@
   font-size: 30px;
   margin-left: 20px;
   color: #000000;
-  width: 50%;
+  width: 15%;
 }
 
 .class-menu {
   float: right;
   width: 50%;
   color: white;
+}
+
+.epoch-slider{
+  width: 15%;
+  margin-left: 20px;
+}
+
+#epoch-label{
+  font-size: 20px;
+}
+
+#epoch-val{
+  font-size: 20px;
 }
