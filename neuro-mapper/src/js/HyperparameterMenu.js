@@ -29,16 +29,6 @@ export const HyperparameterMenu = observer(
             setAnchorElMinDist(null);
         };
 
-        const [anchorElSampleSize, setAnchorElSampleSize] = useState(null);
-
-        const handleClickSampleSize = (event) => {
-            setAnchorElSampleSize(event.currentTarget);
-        };
-
-        const handleCloseSampleSize = () => {
-            setAnchorElSampleSize(null);
-        };
-
         const [curNNeighbors, setCurNNeighbors] = useState(constant.defaultNNeighbors[index]);
         const [curMinDist, setCurMinDist] = useState(constant.defaultMinDist[index]);
         const [curSampleSize, setCurSampleSize] = useState(constant.defaultSampleSize);
@@ -58,10 +48,6 @@ export const HyperparameterMenu = observer(
                 store.setMinDists(index, val)
                 store.loadCustomEmbData(index, curNNeighbors, val, curSampleSize)
             }
-        }
-
-        let handleSampleSizeSliderChange = (e, val) => {
-            setCurSampleSize(val)
         }
 
         return (

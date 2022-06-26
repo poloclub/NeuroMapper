@@ -1,5 +1,6 @@
 import { observer } from "mobx-react";
 import { LabelMenu } from "./LabelMenu";
+import { SampleControl } from "./SampleControl";
 import * as constant from "./constant.js";
 import { Slider } from "@mui/material";
 import { EpochControlBottons } from "./EpochControlButtons.js";
@@ -25,28 +26,31 @@ export const NavBar = observer(({ store }) => {
     }
   };
 
-  return <div className="topnav">
-    <div className="logo-text">
-      <b>NeuroMapper</b>
+  return (
+    <div className="topnav">
+      <div className="logo-text">
+        <b>NeuroMapper</b>
+      </div>
+      <EpochControlBottons store={store} />
+      <div className="epoch">
+        <div id="epoch-label">Epoch</div>
+        <div id="epoch-val">{store.epoch}</div>
+      </div>
+      <div className="epoch-slider">
+        <Slider
+            value={store.epoch}
+            valueLabelDisplay="auto"
+            step={5}
+            min={constant.epochs[0]}
+            max={constant.epochs.slice(-1)[0]}
+            color="secondary"
+            onChange={handleSliderChange}
+          />
+      </div>
+      <SampleControl store={store} />
+      <div className="class-menu">
+        <LabelMenu store={store} />
+      </div>
     </div>
-    <EpochControlBottons store={store} />
-    <div className="epoch">
-      <div id="epoch-label">Epoch</div>
-      <div id="epoch-val">{store.epoch}</div>
-    </div>
-    <div className="epoch-slider">
-      <Slider
-          value={store.epoch}
-          valueLabelDisplay="auto"
-          step={5}
-          min={constant.epochs[0]}
-          max={constant.epochs.slice(-1)[0]}
-          color="secondary"
-          onChange={handleSliderChange}
-        />
-    </div>
-    <div className="class-menu">
-      <LabelMenu store={store} />
-    </div>
-  </div>;
+  );
 });
