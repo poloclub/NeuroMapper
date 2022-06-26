@@ -1,9 +1,9 @@
 import { observable, makeObservable, action } from "mobx";
 import { ScatterGL, RenderMode } from "scatter-gl";
 import * as constant from "./constant.js";
-import { create, all } from 'mathjs'
+import { create, all } from "mathjs";
 
-const math = create(all, {})
+const math = create(all, {});
 
 export class Store {
   /**
@@ -91,37 +91,40 @@ export class Store {
 
   animationStatus = "pause";
   setAnimationStatus(animationStatus) {
-    this.animationStatus = animationStatus
+    this.animationStatus = animationStatus;
   }
 
-  nNeighbors = constant.defaultNNeighbors
+  nNeighbors = constant.defaultNNeighbors;
   setNNeighbors(index, value) {
-    this.nNeighbors[index] = value
+    this.nNeighbors[index] = value;
   }
 
-  minDists = constant.defaultMinDist
+  minDists = constant.defaultMinDist;
   setMinDists(index, value) {
-    this.minDists[index] = value
+    this.minDists[index] = value;
   }
 
-  sampleSize = constant.defaultSampleSize
+  sampleSize = constant.defaultSampleSize;
   setSampleSize(value) {
-    this.sampleSize = value
+    this.sampleSize = value;
   }
 
-  sampleIndices = constant.defaultSampleIndices
+  sampleIndices = constant.defaultSampleIndices;
   setSampleIndices(sampleIndices) {
-    this.sampleIndices = sampleIndices
+    this.sampleIndices = sampleIndices;
   }
 
-  showLabels = constant.cifar_10_classes
+  showLabels = constant.cifar_10_classes;
   setShowLabels(value) {
-    this.showLabels = value
+    this.showLabels = value;
+  }
+  addShowLabels(value) {
+    this.showLabels.push(value);
   }
 
-  showLabels = constant.cifar_10_classes
+  showLabels = constant.cifar_10_classes;
   setShowLabels(value) {
-    this.showLabels = value
+    this.showLabels = value;
   }
   /**
    * Constructor of Store
@@ -162,9 +165,10 @@ export class Store {
       setSampleSize: action,
       showLabels: observable,
       setShowLabels: action,
+      addShowLabels: action,
       sampleIndices: observable,
       setSampleIndices: action,
-    })
+    });
 
     // Load data
     this.loadAllData();
@@ -181,7 +185,7 @@ export class Store {
   loadEmbData() {
     let embData = {};
     for (let i = 0; i < constant.layers.length; i++) {
-      let layer = constant.layers[i]
+      let layer = constant.layers[i];
       // Initialize embData
       embData[layer] = {};
 
@@ -190,10 +194,14 @@ export class Store {
         embData[layer][epoch] = {};
 
         // File paths
-        let customFilePath = [layer, '_pre_embeded',`_(${constant.defaultNNeighbors[i]}, ${constant.defaultMinDist[i]})`].join("")
+        let customFilePath = [
+          layer,
+          "_pre_embeded",
+          `_(${constant.defaultNNeighbors[i]}, ${constant.defaultMinDist[i]})`,
+        ].join("");
         let dirPath = [constant.embDir, customFilePath].join("/");
-        let embFileName = `${dirPath}/${epoch}_embedding.csv`
-        let labelFileName = `${dirPath}/${epoch}_labels.csv`
+        let embFileName = `${dirPath}/${epoch}_embedding.csv`;
+        let labelFileName = `${dirPath}/${epoch}_labels.csv`;
 
         // Load embedding and label data
         fetch(embFileName)
@@ -229,122 +237,139 @@ export class Store {
   }
 
   shuffle(array) {
-    var tmp, current, top = array.length;
-    if(top) while(--top) {
-      current = Math.floor(Math.random() * (top + 1));
-      tmp = array[current];
-      array[current] = array[top];
-      array[top] = tmp;
-    }
+    var tmp,
+      current,
+      top = array.length;
+    if (top)
+      while (--top) {
+        current = Math.floor(Math.random() * (top + 1));
+        tmp = array[current];
+        array[current] = array[top];
+        array[top] = tmp;
+      }
     return array;
   }
 
   regenerateSample(sampleSize) {
-    let newSampleIndices = this.shuffle(Array.from(Array(constant.defaultSampleSize).keys())).slice(0, sampleSize).sort((a, b) => a - b);
-    this.setSampleIndices(newSampleIndices)
+    let newSampleIndices = this.shuffle(
+      Array.from(Array(constant.defaultSampleSize).keys())
+    )
+      .slice(0, sampleSize)
+      .sort((a, b) => a - b);
+    this.setSampleIndices(newSampleIndices);
   }
 
   loadCustomEmbData(index, nNeighbors, minDists) {
     let tempData = {};
 
-    let promises = []
-    let layer = constant.layers[index]
+    let promises = [];
+    let layer = constant.layers[index];
 
     for (let epoch of constant.epochs) {
       // Initialize embData
       tempData[epoch] = {};
 
-      let customFilePath = [layer, '_pre_embeded',`_(${nNeighbors}, ${minDists})`].join("")
+      let customFilePath = [
+        layer,
+        "_pre_embeded",
+        `_(${nNeighbors}, ${minDists})`,
+      ].join("");
       // File paths
       let dirPath = [constant.embDir, customFilePath].join("/");
       let embFileName = `${dirPath}/${epoch}_embedding.csv`;
       let labelFileName = `${dirPath}/${epoch}_labels.csv`;
-  
+
       // Load embedding and label data
       promises.push(
-      fetch(embFileName)
-        .then((res) => res.text())
-        .then((data) => {
-          data = data
-            .split("\n")
-            .map((coord) => coord.split(",").map((v) => parseFloat(v)))
-            .slice(0, -1);
-          tempData[epoch]["emb"] = data;
+        fetch(embFileName)
+          .then((res) => res.text())
+          .then((data) => {
+            data = data
+              .split("\n")
+              .map((coord) => coord.split(",").map((v) => parseFloat(v)))
+              .slice(0, -1);
+            tempData[epoch]["emb"] = data;
 
-          // Load label data
-          fetch(labelFileName)
-            .then((res) => res.text())
-            .then((labelData) => {
-              labelData = labelData
-                .split("\n")
-                .map((label) => parseFloat(label))
-                .slice(0, -1);
-              tempData[epoch]["label"] = labelData;
+            // Load label data
+            fetch(labelFileName)
+              .then((res) => res.text())
+              .then((labelData) => {
+                labelData = labelData
+                  .split("\n")
+                  .map((label) => parseFloat(label))
+                  .slice(0, -1);
+                tempData[epoch]["label"] = labelData;
 
-              if (
-                this.isLast(epoch, constant.epochs)
-              ) {
-                let fstEpoch = constant.epochs[0];
-                let numEmbPoints = tempData[fstEpoch]["emb"].length;
-                let parsedEmbData = Array(numEmbPoints);
-                for (let i = 0; i < numEmbPoints; i++) {
-                  parsedEmbData[i] = {
-                    emb: {},
-                    label: tempData[fstEpoch]["label"][i],
-                  };
-                  for (let epoch of constant.epochs) {
-                    parsedEmbData[i]["emb"][epoch] =
-                      tempData[epoch]["emb"][i];
+                if (this.isLast(epoch, constant.epochs)) {
+                  let fstEpoch = constant.epochs[0];
+                  let numEmbPoints = tempData[fstEpoch]["emb"].length;
+                  let parsedEmbData = Array(numEmbPoints);
+                  for (let i = 0; i < numEmbPoints; i++) {
+                    parsedEmbData[i] = {
+                      emb: {},
+                      label: tempData[fstEpoch]["label"][i],
+                    };
+                    for (let epoch of constant.epochs) {
+                      parsedEmbData[i]["emb"][epoch] =
+                        tempData[epoch]["emb"][i];
+                    }
                   }
-                }
 
-                this.embData[layer] = parsedEmbData
-                this.setLoadingEmbDone(true);
-                this.updateCustomEmbData(index)
-              }
-            });
-        })
-      )
+                  this.embData[layer] = parsedEmbData;
+                  this.setLoadingEmbDone(true);
+                  this.updateCustomEmbData(index);
+                }
+              });
+          })
+      );
     }
-    
   }
 
   updateCustomEmbData(index) {
-    let layer = constant.layers[index]
-    let points = this.embData[layer]
-    let epoch = this.epoch
-    
-    const labels = []
-    const datapoints = []
-    let sampleIndicesPtr = 0
+    let layer = constant.layers[index];
+    let points = this.embData[layer];
+    let epoch = this.epoch;
+
+    const labels = [];
+    const datapoints = [];
+    let sampleIndicesPtr = 0;
     for (let i = 0; i < points.length; i++) {
-      let hasShownLabel = this.showLabels.includes(constant.cifar_10_classes[points[i]["label"]])
-      if (hasShownLabel && sampleIndicesPtr < this.sampleIndices.length && this.sampleIndices[sampleIndicesPtr] == i) {
-        labels.push(points[i]["label"])
-        let point = points[i]["emb"][epoch]
-        point = math.rotate(point, math.pi/6 * constant.rotationAmount[index])
-        point[0] = point[0] * constant.flipAmount[index]
-        datapoints.push(point)
-        sampleIndicesPtr+=1;
+      let hasShownLabel = this.showLabels.includes(
+        constant.cifar_10_classes[points[i]["label"]]
+      );
+      if (
+        hasShownLabel &&
+        sampleIndicesPtr < this.sampleIndices.length &&
+        this.sampleIndices[sampleIndicesPtr] == i
+      ) {
+        labels.push(points[i]["label"]);
+        let point = points[i]["emb"][epoch];
+        point = math.rotate(
+          point,
+          (math.pi / 6) * constant.rotationAmount[index]
+        );
+        point[0] = point[0] * constant.flipAmount[index];
+        datapoints.push(point);
+        sampleIndicesPtr += 1;
       } else if (!hasShownLabel && this.sampleIndices[sampleIndicesPtr] == i) {
-        sampleIndicesPtr+=1;
+        sampleIndicesPtr += 1;
       }
     }
 
     const metadata = [];
-    labels.forEach(element => {
+    labels.forEach((element) => {
       metadata.push({
         labelIndex: element,
-        label: constant.cifar_10_classes[element]
-      })
+        label: constant.cifar_10_classes[element],
+      });
     });
 
     const dataset = new ScatterGL.Dataset(datapoints, metadata);
     dataset.setSpriteMetadata({
-      spriteImage: 'spritesheet.png',
+      spriteImage: "spritesheet.png",
       singleSpriteSize: [32, 32],
     });
-    this.plots[index].updateDataset(dataset)
+    this.plots[index].updateDataset(dataset);
     this.plots[index].setPointColorer((i, selectedIndices, hoverIndex) => {
       const isSelected = selectedIndices.has(i);
       if (hoverIndex === i) {

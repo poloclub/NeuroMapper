@@ -1,5 +1,4 @@
 import { observer } from "mobx-react";
-import { ScatterGL } from "scatter-gl";
 import SkipNextRoundedIcon from "@mui/icons-material/SkipNextRounded";
 import PlayCircleRoundedIcon from "@mui/icons-material/PlayCircleRounded";
 import PauseCircleRoundedIcon from "@mui/icons-material/PauseCircleRounded";
@@ -12,7 +11,6 @@ export const EpochControlBottons = observer(({ store }) => {
 
   const handleEpochChange = (epoch) => {
     store.setEpoch(epoch);
-    console.log("store.epoch:", store.epoch)
 
     for (let i = 0; i < constant.layers.length; i++) {
       store.updateCustomEmbData(i);
@@ -38,27 +36,21 @@ export const EpochControlBottons = observer(({ store }) => {
     store.setAnimationStatus("play");
     let epochIdx = getCurrentEpochIdx();
 
-    // for (let i = epochIdx + 1; i < numEpochs; i++) {
-    //   if (store.animationStatus == "pause") {
-    //     break;
-    //   }
-    //   let epoch = constant.epochs[i];
-    //   handleEpochChange(epoch);
-    // }
-
     for (let i = epochIdx; i < numEpochs; i++) {
       if (store.animationStatus == "pause") {
         break;
       }
-      setTimeout(function() { 
-        if (store.animationStatus == "play") {
-          clickNext()
-        }
-      }.bind(this), 50)
+      setTimeout(
+        function () {
+          if (store.animationStatus == "play") {
+            clickNext();
+          }
+        }.bind(this),
+        50
+      );
     }
-    
+
     epochIdx = getCurrentEpochIdx();
-    console.log("epochIdx:", epochIdx, numEpochs)
     if (epochIdx == numEpochs - 1) {
       store.setAnimationStatus("pause");
     }

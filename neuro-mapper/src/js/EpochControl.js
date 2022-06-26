@@ -1,7 +1,6 @@
 import * as constant from "./constant.js";
 import { observer } from "mobx-react";
 import { Slider } from "@mui/material";
-import { ScatterGL, RenderMode } from "scatter-gl";
 import { EpochControlBottons } from "./EpochControlButtons.js";
 
 export const EpochControl = observer(({ store }) => {
