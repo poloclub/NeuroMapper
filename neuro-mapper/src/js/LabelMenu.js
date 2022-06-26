@@ -87,7 +87,7 @@ export const LabelMenu = observer(({ store }) => {
     let currLabels = [...store.showLabels];
     if (currLabels.indexOf(clickedLabel) < 0) {
       currLabels.push(clickedLabel);
-    } else {
+    } else if (currLabels.length > 1) {
       const index = currLabels.indexOf(clickedLabel);
       if (index > -1) {
         currLabels.splice(index, 1);

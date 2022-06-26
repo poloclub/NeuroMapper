@@ -351,7 +351,11 @@ export class Store {
         point[0] = point[0] * constant.flipAmount[index];
         datapoints.push(point);
         sampleIndicesPtr += 1;
-      } else if (!hasShownLabel && this.sampleIndices[sampleIndicesPtr] == i) {
+      } else if (
+        !hasShownLabel &&
+        sampleIndicesPtr < this.sampleIndices.length &&
+        this.sampleIndices[sampleIndicesPtr] == i
+      ) {
         sampleIndicesPtr += 1;
       }
     }
