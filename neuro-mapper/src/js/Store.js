@@ -318,12 +318,15 @@ export class Store {
     const datapoints = []
     let sampleIndicesPtr = 0
     for (let i = 0; i < points.length; i++) {
-      if (this.showLabels.includes(constant.cifar_10_classes[points[i]["label"]]) && sampleIndicesPtr < this.sampleIndices.length && this.sampleIndices[sampleIndicesPtr] == i) {
+      let hasShownLabel = this.showLabels.includes(constant.cifar_10_classes[points[i]["label"]])
+      if (hasShownLabel && sampleIndicesPtr < this.sampleIndices.length && this.sampleIndices[sampleIndicesPtr] == i) {
         labels.push(points[i]["label"])
         let point = points[i]["emb"][epoch]
         point = math.rotate(point, math.pi/6 * constant.rotationAmount[index])
         point[0] = point[0] * constant.flipAmount[index]
         datapoints.push(point)
+        sampleIndicesPtr+=1;
+      } else if (!hasShownLabel && this.sampleIndices[sampleIndicesPtr] == i) {
         sampleIndicesPtr+=1;
       }
     }

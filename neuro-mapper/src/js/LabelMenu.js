@@ -106,42 +106,7 @@ export const LabelMenu = observer(
           store.setShowLabels(currLabels)
 
           for (let i = 0; i < constant.layers.length; i++) {
-            let layer = constant.layers[i]
-            let points = store.embData[layer]
-            let epoch = store.epoch
-            
-            const labels = []
-            const datapoints = []
-            for (let i = 0; i < points.length; i++) {
-              if (store.showLabels.includes(constant.cifar_10_classes[points[i]["label"]])) {
-                labels.push(points[i]["label"])
-                datapoints.push(points[i]["emb"][epoch])
-              }
-            }
-
-            const metadata = [];
-            labels.forEach(element => {
-              metadata.push({
-                labelIndex: element,
-                label: constant.cifar_10_classes[element]
-              })
-            });
-
-            const dataset = new ScatterGL.Dataset(datapoints, metadata);
-            dataset.setSpriteMetadata({
-              spriteImage: 'spritesheet.png',
-              singleSpriteSize: [32, 32],
-            });
-            store.plots[i].updateDataset(dataset)
-            store.plots[i].setPointColorer((i, selectedIndices, hoverIndex) => {
-              const isSelected = selectedIndices.has(i);
-              if (hoverIndex === i) {
-                return "red";
-              }
-              return isSelected
-                ? constant.opaqueColorsByLabel[labels[i]]
-                : constant.heavyTransparentColorsByLabel[labels[i]];
-            });
+            store.updateCustomEmbData(i);
           }
 
         }
