@@ -63,7 +63,7 @@ const useStyles = makeStyles(theme => ({
     color: "transparent"
   },
   icon: {
-    color: "transparent"
+    // color: "transparent"
   },
   selectPaper: {
     backgroundColor: "transparent",
@@ -160,7 +160,7 @@ export const LabelMenu = observer(
         return (
               <div>
                 <FormControl variant="outlined"
-                  sx={{ m: 1, width: '90%' }}
+                  // sx={{ width: '90%' }}
                   classes={{
                     root: classes.quantityRoot
                   }}>
