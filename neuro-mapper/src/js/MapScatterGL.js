@@ -4,11 +4,11 @@ import { useEffect } from "react";
 import * as constant from "./constant.js";
 import { ScatterGL } from "scatter-gl";
 import { EpochControl } from "./EpochControl.js";
-import { HyperparameterMenu } from "./HyperparameterMenu"
+import { HyperparameterMenu } from "./HyperparameterMenu";
 
 import { IconButton } from "@mui/material";
-import RotateRightIcon from '@mui/icons-material/RotateRight';
-import FlipIcon from '@mui/icons-material/Flip';
+import RotateRightIcon from "@mui/icons-material/RotateRight";
+import FlipIcon from "@mui/icons-material/Flip";
 
 export const MapScatterGL = observer(({ store }) => {
   let numLayers = constant.layers.length;
@@ -112,36 +112,43 @@ export const MapScatterGL = observer(({ store }) => {
     <div id="map-wrap">
       <div id="map-contents">
         {constant.layers.map((layer, i) => {
-            let curr_id = `scatter-gl-wrapper-layer${i}`
-            let curr_scattergl_id = `scatter-gl-container-layer${i}`
-            return (
-              <div id={curr_id} className='scatter-gl-wrapper-layer'> 
-                <div className={`scatter-gl-layer`}>
-                  <div className={'scatter-gl-layer-label'}>
-                    Residual Block {i + 1} Output
-                  </div>
-                  <div className='scatter-gl-layer-rotate'> 
-                    <IconButton onClick={() => {
-                        let amount = constant.flipAmount[i] === 1 ? -1 : 1
-                        constant.rotationAmount[i] = (constant.rotationAmount[i] + amount) % 12
-                        store.updateCustomEmbData(i);
-                    }}>
-                        <RotateRightIcon />
-                    </IconButton>
-                    <IconButton onClick={() => {
-                        constant.flipAmount[i] = constant.flipAmount[i] * -1
-                        store.updateCustomEmbData(i);
-                    }}>
-                        <FlipIcon />
-                    </IconButton>
-                  </div>
+          let curr_id = `scatter-gl-wrapper-layer${i}`;
+          let curr_scattergl_id = `scatter-gl-container-layer${i}`;
+          return (
+            <div id={curr_id} className="scatter-gl-wrapper-layer">
+              <div className={`scatter-gl-layer`}>
+                <div className={"scatter-gl-layer-label"}>
+                  Residual Block {i + 1} Output
                 </div>
-                <div id={curr_scattergl_id} className={`scatter-gl-container-layer`}>
+                <div className="scatter-gl-layer-rotate">
+                  <IconButton
+                    onClick={() => {
+                      let amount = constant.flipAmount[i] === 1 ? -1 : 1;
+                      constant.rotationAmount[i] =
+                        (constant.rotationAmount[i] + amount) % 12;
+                      store.updateCustomEmbData(i);
+                    }}
+                  >
+                    <RotateRightIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => {
+                      constant.flipAmount[i] = constant.flipAmount[i] * -1;
+                      store.updateCustomEmbData(i);
+                    }}
+                  >
+                    <FlipIcon />
+                  </IconButton>
                 </div>
-              <HyperparameterMenu store={store} index={i}/>
               </div>
-            )
-          })}
+              <div
+                id={curr_scattergl_id}
+                className={`scatter-gl-container-layer`}
+              ></div>
+              <HyperparameterMenu store={store} index={i} />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

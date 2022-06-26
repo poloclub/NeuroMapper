@@ -25,18 +25,42 @@ export const heavyTransparentColorsByLabel = hues.map(
  * EpochControlButtons
  */
 export const buttonSize = 50;
-export const opaqueColorsByLabel = hues.map((hue) => `hsla(${hue}, 100%, 50%, 1)`);
-export const embSize = 4
+export const opaqueColorsByLabel = hues.map(
+  (hue) => `hsla(${hue}, 100%, 50%, 1)`
+);
+export const embSize = 4;
 // export const embColors = ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a"]
 // export const cifar_10_classes = ['plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
 
-export const embColors = ["#e31a1c", "#fb9a99", "#ff7f00", "#fdbf6f", "#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "#cab2d6", "#6a3d9a"]
-export const cifar_10_classes = ['dog', 'deer', 'horse', 'frog', 'cat', 'bird', 'plane', 'car', 'ship', 'truck']
+export const embColors = [
+  "#e31a1c",
+  "#fb9a99",
+  "#ff7f00",
+  "#fdbf6f",
+  "#33a02c",
+  "#b2df8a",
+  "#a6cee3",
+  "#1f78b4",
+  "#cab2d6",
+  "#6a3d9a",
+];
+export const cifar_10_classes = [
+  "dog",
+  "deer",
+  "horse",
+  "frog",
+  "cat",
+  "bird",
+  "plane",
+  "car",
+  "ship",
+  "truck",
+];
 
-export const defaultNNeighbors = [20, 20, 20, 20]
-export const defaultMinDist = [0.1, 0.1, 0.1, 0.1]
-export const defaultSampleSize = 10000
-export const defaultSampleIndices = Array.from(Array(defaultSampleSize).keys())
+export const defaultNNeighbors = [20, 20, 20, 20];
+export const defaultMinDist = [0.1, 0.1, 0.1, 0.1];
+export const defaultSampleSize = 10000;
+export const defaultSampleIndices = Array.from(Array(defaultSampleSize).keys());
 
-export const rotationAmount = [0, 0, 0, 0]
-export const flipAmount = [1, 1, 1, 1]
+export const rotationAmount = [0, 0, 0, 0];
+export const flipAmount = [1, 1, 1, 1];

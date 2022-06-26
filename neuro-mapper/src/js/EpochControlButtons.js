@@ -12,7 +12,7 @@ export const EpochControlBottons = observer(({ store }) => {
 
   const handleEpochChange = (epoch) => {
     store.setEpoch(epoch);
-    console.log("store.epoch:", store.epoch)
+    console.log("store.epoch:", store.epoch);
 
     for (let i = 0; i < constant.layers.length; i++) {
       store.updateCustomEmbData(i);
@@ -50,15 +50,18 @@ export const EpochControlBottons = observer(({ store }) => {
       if (store.animationStatus == "pause") {
         break;
       }
-      setTimeout(function() { 
-        if (store.animationStatus == "play") {
-          clickNext()
-        }
-      }.bind(this), 50)
+      setTimeout(
+        function () {
+          if (store.animationStatus == "play") {
+            clickNext();
+          }
+        }.bind(this),
+        50
+      );
     }
-    
+
     epochIdx = getCurrentEpochIdx();
-    console.log("epochIdx:", epochIdx, numEpochs)
+    console.log("epochIdx:", epochIdx, numEpochs);
     if (epochIdx == numEpochs - 1) {
       store.setAnimationStatus("pause");
     }

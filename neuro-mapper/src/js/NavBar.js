@@ -38,14 +38,14 @@ export const NavBar = observer(({ store }) => {
       </div>
       <div className="epoch-slider">
         <Slider
-            value={store.epoch}
-            valueLabelDisplay="auto"
-            step={5}
-            min={constant.epochs[0]}
-            max={constant.epochs.slice(-1)[0]}
-            color="secondary"
-            onChange={handleSliderChange}
-          />
+          value={store.epoch}
+          valueLabelDisplay="auto"
+          step={5}
+          min={constant.epochs[0]}
+          max={constant.epochs.slice(-1)[0]}
+          color="secondary"
+          onChange={handleSliderChange}
+        />
       </div>
       <SampleControl store={store} />
       <div className="class-menu">
