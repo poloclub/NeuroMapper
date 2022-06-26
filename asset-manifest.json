@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/NeuroMapper/static/css/main.2ab13f4a.css",
-    "main.js": "/NeuroMapper/static/js/main.c62f46f9.js",
+    "main.css": "/NeuroMapper/static/css/main.b760e067.css",
+    "main.js": "/NeuroMapper/static/js/main.ea0c640b.js",
     "static/js/787.3915091c.chunk.js": "/NeuroMapper/static/js/787.3915091c.chunk.js",
     "index.html": "/NeuroMapper/index.html",
-    "main.2ab13f4a.css.map": "/NeuroMapper/static/css/main.2ab13f4a.css.map",
-    "main.c62f46f9.js.map": "/NeuroMapper/static/js/main.c62f46f9.js.map",
+    "main.b760e067.css.map": "/NeuroMapper/static/css/main.b760e067.css.map",
+    "main.ea0c640b.js.map": "/NeuroMapper/static/js/main.ea0c640b.js.map",
     "787.3915091c.chunk.js.map": "/NeuroMapper/static/js/787.3915091c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2ab13f4a.css",
-    "static/js/main.c62f46f9.js"
+    "static/css/main.b760e067.css",
+    "static/js/main.ea0c640b.js"
   ]
 }
