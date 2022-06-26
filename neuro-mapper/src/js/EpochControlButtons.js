@@ -36,14 +36,6 @@ export const EpochControlBottons = observer(({ store }) => {
     store.setAnimationStatus("play");
     let epochIdx = getCurrentEpochIdx();
 
-    // for (let i = epochIdx + 1; i < numEpochs; i++) {
-    //   if (store.animationStatus == "pause") {
-    //     break;
-    //   }
-    //   let epoch = constant.epochs[i];
-    //   handleEpochChange(epoch);
-    // }
-
     for (let i = epochIdx; i < numEpochs; i++) {
       if (store.animationStatus == "pause") {
         break;

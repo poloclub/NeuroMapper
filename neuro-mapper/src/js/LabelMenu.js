@@ -84,7 +84,7 @@ function getStyles(isSelected, allSelected, theme) {
 export const LabelMenu = observer(({ store }) => {
   let handleChange = (event) => {
     let clickedLabel = event.target.dataset.value;
-    let currLabels = store.showLabels;
+    let currLabels = [...store.showLabels];
     if (currLabels.indexOf(clickedLabel) < 0) {
       currLabels.push(clickedLabel);
     } else {
@@ -152,7 +152,6 @@ export const LabelMenu = observer(({ store }) => {
             </Box>
           )}
           MenuProps={MenuProps}
-          disableUnderline
         >
           {constant.cifar_10_classes.map((classLabel) => (
             <MenuItem

@@ -114,7 +114,11 @@ export const MapScatterGL = observer(({ store }) => {
           let curr_id = `scatter-gl-wrapper-layer${i}`;
           let curr_scattergl_id = `scatter-gl-container-layer${i}`;
           return (
-            <div id={curr_id} className="scatter-gl-wrapper-layer">
+            <div
+              key={curr_id}
+              id={curr_id}
+              className="scatter-gl-wrapper-layer"
+            >
               <div className={`scatter-gl-layer`}>
                 <div className={"scatter-gl-layer-label"}>
                   Residual Block {i + 1} Output

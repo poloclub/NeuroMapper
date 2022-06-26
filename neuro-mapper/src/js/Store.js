@@ -118,6 +118,9 @@ export class Store {
   setShowLabels(value) {
     this.showLabels = value;
   }
+  addShowLabels(value) {
+    this.showLabels.push(value);
+  }
 
   showLabels = constant.cifar_10_classes;
   setShowLabels(value) {
@@ -162,6 +165,7 @@ export class Store {
       setSampleSize: action,
       showLabels: observable,
       setShowLabels: action,
+      addShowLabels: action,
       sampleIndices: observable,
       setSampleIndices: action,
     });
