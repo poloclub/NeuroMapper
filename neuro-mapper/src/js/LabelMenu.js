@@ -1,6 +1,5 @@
 import { observer } from "mobx-react";
 import * as constant from "./constant.js";
-import { ScatterGL, RenderMode } from "scatter-gl";
 import * as React from "react";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -8,9 +7,6 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { makeStyles } from "@material-ui/core/styles";
-import ListItemText from "@mui/material/ListItemText";
-import Checkbox from "@mui/material/Checkbox";
-import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import { createTheme } from "@mui/material/styles";
@@ -87,7 +83,6 @@ function getStyles(isSelected, allSelected, theme) {
 
 export const LabelMenu = observer(({ store }) => {
   let handleChange = (event) => {
-    console.log(event.target.dataset.value);
     let clickedLabel = event.target.dataset.value;
     let currLabels = store.showLabels;
     if (currLabels.indexOf(clickedLabel) < 0) {

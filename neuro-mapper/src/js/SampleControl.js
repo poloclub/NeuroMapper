@@ -1,5 +1,4 @@
 import { observer } from "mobx-react";
-import { useState } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -11,9 +10,6 @@ export const SampleControl = observer(({ store }) => {
     store.setSampleSize(event.target.value);
     store.regenerateSample(event.target.value);
     constant.layers.map((layer, i) => {
-      console.log(store.nNeighbors[i]);
-      console.log(store.minDists[i]);
-      console.log(event.target.value);
       store.loadCustomEmbData(
         i,
         store.nNeighbors[i],

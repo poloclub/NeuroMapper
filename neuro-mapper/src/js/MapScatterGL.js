@@ -3,7 +3,6 @@ import { useEffect } from "react";
 
 import * as constant from "./constant.js";
 import { ScatterGL } from "scatter-gl";
-import { EpochControl } from "./EpochControl.js";
 import { HyperparameterMenu } from "./HyperparameterMenu";
 
 import { IconButton } from "@mui/material";
