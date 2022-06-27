@@ -2,6 +2,7 @@
   "name": "neuro-mapper",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://poloclub.github.io/NeuroMapper/",
   "dependencies": {
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.6.0",
@@ -30,7 +31,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
