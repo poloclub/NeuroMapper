@@ -1,4 +1,4 @@
 # NeuroMapper
 In-browser Visualizer for Neural Network Training
 
-Demo Link (To be added)
+[Demo](https://poloclub.github.io/NeuroMapper/)
